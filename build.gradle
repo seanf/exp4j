@@ -4,7 +4,7 @@ plugins {
 repositories {
     mavenCentral()
 }
-group 'com.example'
+group 'net.objecthunter'
 version '0.0.1'
 
 apply plugin: 'maven-publish'
@@ -39,6 +39,7 @@ kotlin {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test'
                 implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+                implementation 'de.christophkraemer:rhino-script-engine:1.1.1'
             }
         }
         jsMain {

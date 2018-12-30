@@ -26,7 +26,7 @@ class PerformanceTest {
     @Throws(Exception::class)
     fun testBenches() {
         print("+------------------------+---------------------------+--------------------------+%n".format())
-        print("| %-22s | %-25s | %-24s |%n".format("Implementation", "Calculations per Second", "Percentage of Math"))
+        print("| %-22s | %-25s | %-24s |%n".format("Implementation", "Calculations per Second", "Percentage of Java Math"))
         print("+------------------------+---------------------------+--------------------------+%n".format())
 
         val math = benchJavaMath()
@@ -37,18 +37,25 @@ class PerformanceTest {
         val dbRate = db.toDouble() / BENCH_TIME.toDouble()
         print("| %-22s | %25.2f | %22.2f %% |%n".format("exp4j", dbRate, dbRate * 100 / mathRate))
 
-        val js = benchJavaScript()
-        val jsRate = js.toDouble() / BENCH_TIME.toDouble()
-        print("| %-22s | %25.2f | %22.2f %% |%n".format("JSR-223 (Java Script)", jsRate, jsRate * 100 / mathRate))
+        val js1 = benchJavaScript("Nashorn")
+        val js1Rate = js1.toDouble() / BENCH_TIME
+        print("| %-22s | %25.2f | %22.2f %% |%n".format("JSR-223 (Nashorn)", js1Rate, js1Rate * 100 / mathRate))
+
+        val js2 = benchJavaScript("rhino")
+        val js2Rate = js2.toDouble() / BENCH_TIME
+        print("| %-22s | %25.2f | %22.2f %% |%n".format("JSR-223 (Rhino)", js2Rate, js2Rate * 100 / mathRate))
         print("+------------------------+---------------------------+--------------------------+%n".format())
+
     }
+
+    private val seed = System.currentTimeMillis()
 
     private fun benchDouble(): Int {
         val expression = ExpressionBuilder(EXPRESSION)
                 .variables("x", "y")
                 .build()
         var `val`: Double
-        val rnd = Random
+        val rnd = Random(seed)
         val timeout = BENCH_TIME
         val time = System.currentTimeMillis() + 1000 * timeout
         var count = 0
@@ -70,7 +77,7 @@ class PerformanceTest {
         var `val`: Double
         val rate: Double
         var count = 0
-        val rnd = Random
+        val rnd = Random(seed)
         while (time > System.currentTimeMillis()) {
             x = rnd.nextDouble()
             y = rnd.nextDouble()
@@ -82,30 +89,30 @@ class PerformanceTest {
     }
 
     @Throws(Exception::class)
-    private fun benchJavaScript(): Int {
+    private fun benchJavaScript(engineName: String): Int {
         val mgr = ScriptEngineManager()
-        val engine = mgr.getEngineByName("JavaScript")
+        val engine = mgr.getEngineByName(engineName)
         val timeout = BENCH_TIME
-        var time = System.currentTimeMillis() + 1000 * timeout
+        val time = System.currentTimeMillis() + 1000 * timeout
         var x: Double
         var y: Double
         val `val`: Double
         val rate: Double
         var count = 0
-        val rnd = Random
+        val rnd = Random(seed)
         if (engine == null) {
             System.err.println("Unable to instantiate javascript engine. skipping naive JS bench.")
             return -1
         } else {
-            time = System.currentTimeMillis() + 1000 * timeout
             count = 0
             while (time > System.currentTimeMillis()) {
                 x = rnd.nextDouble()
                 y = rnd.nextDouble()
+                // TODO this changes the expression every single time, unlike benchDouble
                 engine.eval("Math.log($x) - $y* (Math.sqrt($x^Math.cos($y)))")
                 count++
             }
-            rate = (count / timeout).toDouble()
+            rate = (count / timeout.toDouble())
         }
         return count
     }
