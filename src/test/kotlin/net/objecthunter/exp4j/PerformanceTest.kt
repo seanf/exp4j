@@ -15,44 +15,32 @@
 */
 package net.objecthunter.exp4j
 
-import java.util.Formatter
-import java.util.Random
-
-import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 
 import org.junit.Test
+import kotlin.random.Random
 
 class PerformanceTest {
 
     @Test
     @Throws(Exception::class)
     fun testBenches() {
-        val sb = StringBuffer()
-        val fmt = Formatter(sb)
-        fmt.format("+------------------------+---------------------------+--------------------------+%n")
-        fmt.format("| %-22s | %-25s | %-24s |%n", "Implementation", "Calculations per Second", "Percentage of Math")
-        fmt.format("+------------------------+---------------------------+--------------------------+%n")
-        print(sb.toString())
-        sb.setLength(0)
+        print("+------------------------+---------------------------+--------------------------+%n".format())
+        print("| %-22s | %-25s | %-24s |%n".format("Implementation", "Calculations per Second", "Percentage of Math"))
+        print("+------------------------+---------------------------+--------------------------+%n".format())
 
         val math = benchJavaMath()
         val mathRate = math.toDouble() / BENCH_TIME.toDouble()
-        fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "Java Math", mathRate, 100f)
-        print(sb.toString())
-        sb.setLength(0)
+        print("| %-22s | %25.2f | %22.2f %% |%n".format("Java Math", mathRate, 100f))
 
         val db = benchDouble()
         val dbRate = db.toDouble() / BENCH_TIME.toDouble()
-        fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "exp4j", dbRate, dbRate * 100 / mathRate)
-        print(sb.toString())
-        sb.setLength(0)
+        print("| %-22s | %25.2f | %22.2f %% |%n".format("exp4j", dbRate, dbRate * 100 / mathRate))
 
         val js = benchJavaScript()
         val jsRate = js.toDouble() / BENCH_TIME.toDouble()
-        fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "JSR-223 (Java Script)", jsRate, jsRate * 100 / mathRate)
-        fmt.format("+------------------------+---------------------------+--------------------------+%n")
-        print(sb.toString())
+        print("| %-22s | %25.2f | %22.2f %% |%n".format("JSR-223 (Java Script)", jsRate, jsRate * 100 / mathRate))
+        print("+------------------------+---------------------------+--------------------------+%n".format())
     }
 
     private fun benchDouble(): Int {
@@ -60,7 +48,7 @@ class PerformanceTest {
                 .variables("x", "y")
                 .build()
         var `val`: Double
-        val rnd = Random()
+        val rnd = Random
         val timeout = BENCH_TIME
         val time = System.currentTimeMillis() + 1000 * timeout
         var count = 0
@@ -82,7 +70,7 @@ class PerformanceTest {
         var `val`: Double
         val rate: Double
         var count = 0
-        val rnd = Random()
+        val rnd = Random
         while (time > System.currentTimeMillis()) {
             x = rnd.nextDouble()
             y = rnd.nextDouble()
@@ -104,7 +92,7 @@ class PerformanceTest {
         val `val`: Double
         val rate: Double
         var count = 0
-        val rnd = Random()
+        val rnd = Random
         if (engine == null) {
             System.err.println("Unable to instantiate javascript engine. skipping naive JS bench.")
             return -1

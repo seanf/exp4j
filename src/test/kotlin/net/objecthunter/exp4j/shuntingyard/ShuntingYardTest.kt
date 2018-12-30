@@ -19,8 +19,6 @@ import net.objecthunter.exp4j.TestUtil.assertNumberToken
 import net.objecthunter.exp4j.TestUtil.assertOperatorToken
 import net.objecthunter.exp4j.TestUtil.assertVariableToken
 
-import java.util.stream.IntStream
-
 import net.objecthunter.exp4j.operator.Operator
 
 import org.junit.Test
@@ -106,8 +104,8 @@ class ShuntingYardTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }

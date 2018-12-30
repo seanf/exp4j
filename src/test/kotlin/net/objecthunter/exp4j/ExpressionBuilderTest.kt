@@ -18,8 +18,6 @@ package net.objecthunter.exp4j
 
 import org.junit.Assert.*
 
-import java.util.stream.IntStream
-
 import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.operator.Operator
 
@@ -29,7 +27,6 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.ln
 import kotlin.math.ln1p
-import kotlin.math.log
 import kotlin.math.sin
 import kotlin.math.sqrt
 
@@ -123,8 +120,8 @@ class ExpressionBuilderTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }
@@ -674,8 +671,8 @@ class ExpressionBuilderTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }
@@ -713,8 +710,8 @@ class ExpressionBuilderTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }
@@ -1702,8 +1699,8 @@ class ExpressionBuilderTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }
@@ -2879,8 +2876,8 @@ class ExpressionBuilderTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }

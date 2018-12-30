@@ -19,10 +19,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 
-import java.util.stream.IntStream
-
 import org.junit.Test
-import java.util.function.IntConsumer
 
 /**
  *
@@ -50,7 +47,7 @@ class ArrayStackTest {
     fun testPushLessSize() {
         val stack = ArrayStack(5)
 
-        IntStream.range(0, 5).forEach(IntConsumer { stack.push(it.toDouble()) })
+        (0 until 5).forEach { stack.push(it.toDouble()) }
 
         assertEquals(5, stack.size().toLong())
     }
@@ -59,7 +56,7 @@ class ArrayStackTest {
     fun testPeek() {
         val stack = ArrayStack(5)
 
-        IntStream.range(0, 5).forEach(IntConsumer { stack.push(it.toDouble()) })
+        (0 until 5).forEach { stack.push(it.toDouble()) }
 
         assertEquals(4.0, stack.peek(), 0.0)
         assertEquals(4.0, stack.peek(), 0.0)
@@ -89,7 +86,7 @@ class ArrayStackTest {
     fun testPop() {
         val stack = ArrayStack(5)
 
-        IntStream.range(0, 5).forEach(IntConsumer { stack.push(it.toDouble()) })
+        (0 until 5).forEach { stack.push(it.toDouble()) }
 
         while (!stack.isEmpty) {
             stack.pop()
@@ -100,7 +97,7 @@ class ArrayStackTest {
     fun testPop2() {
         val stack = ArrayStack(5)
 
-        IntStream.range(0, 5).forEach(IntConsumer { stack.push(it.toDouble()) })
+        (0 until 5).forEach { stack.push(it.toDouble()) }
 
         while (true) {
             stack.pop()
@@ -111,7 +108,7 @@ class ArrayStackTest {
     fun testPop3() {
         val stack = ArrayStack(5)
 
-        IntStream.range(0, 5).forEach { i ->
+        (0 until 5).forEach { i ->
             stack.push(i.toDouble())
             assertEquals(1, stack.size().toLong())
             assertEquals(i.toDouble(), stack.pop(), 0.0)

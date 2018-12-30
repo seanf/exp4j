@@ -20,8 +20,6 @@ import net.objecthunter.exp4j.function.Function
 import org.junit.Assert
 import org.junit.Test
 
-import java.util.Date
-
 import org.junit.Assert.assertTrue
 
 
@@ -303,7 +301,7 @@ class ExpressionValidateTest {
     fun testNoArgFunctionValidation() {
         val now = object : Function("now", 0) {
             override fun apply(vararg args: Double): Double {
-                return Date().time.toDouble()
+                return System.currentTimeMillis().toDouble()
             }
         }
         var e = ExpressionBuilder("14*now()")

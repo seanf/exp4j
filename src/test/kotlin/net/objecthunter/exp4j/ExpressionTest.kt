@@ -26,11 +26,8 @@ import net.objecthunter.exp4j.tokenizer.*
 
 import org.junit.Ignore
 import org.junit.Test
-import java.lang.NullPointerException
 
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import java.util.stream.IntStream
 
 
 class ExpressionTest {
@@ -72,8 +69,10 @@ class ExpressionTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                
+                val result = 1.rangeTo(arg)
+                        .map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }
@@ -180,8 +179,8 @@ class ExpressionTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }
@@ -202,8 +201,8 @@ class ExpressionTest {
                 if (arg < 0) {
                     throw IllegalArgumentException("The operand of the factorial can not be less than zero")
                 }
-                val result = IntStream.rangeClosed(1, arg).asDoubleStream()
-                        .reduce(1.0) { a, b -> a * b }
+                val result = 1.rangeTo(arg).map(Int::toDouble)
+                        .fold(1.0) { a, b -> a * b }
                 return result
             }
         }
