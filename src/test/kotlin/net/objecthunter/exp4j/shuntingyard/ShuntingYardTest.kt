@@ -19,13 +19,9 @@ import net.objecthunter.exp4j.TestUtil.assertNumberToken
 import net.objecthunter.exp4j.TestUtil.assertOperatorToken
 import net.objecthunter.exp4j.TestUtil.assertVariableToken
 
-import java.util.Arrays
-import java.util.HashMap
-import java.util.HashSet
 import java.util.stream.IntStream
 
 import net.objecthunter.exp4j.operator.Operator
-import net.objecthunter.exp4j.tokenizer.Token
 
 import org.junit.Test
 
@@ -45,7 +41,7 @@ class ShuntingYardTest {
     @Throws(Exception::class)
     fun testShuntingYard2() {
         val expression = "3*x"
-        val tokens = ShuntingYard.convertToRPN(expression, null, null, HashSet(Arrays.asList("x")), true)
+        val tokens = ShuntingYard.convertToRPN(expression, null, null, setOf("x"), true)
         assertNumberToken(tokens[0], 3.0)
         assertVariableToken(tokens[1], "x")
         assertOperatorToken(tokens[2], "*", 2, Operator.PRECEDENCE_MULTIPLICATION)

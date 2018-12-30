@@ -15,8 +15,6 @@
  */
 package net.objecthunter.exp4j.shuntingyard
 
-import java.util.*
-
 import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.operator.Operator
 import net.objecthunter.exp4j.tokenizer.OperatorToken
@@ -47,7 +45,7 @@ object ShuntingYard {
             val token = tokenizer.nextToken()
             when (token.type) {
                 Token.TOKEN_NUMBER, Token.TOKEN_VARIABLE -> output.add(token)
-                Token.TOKEN_FUNCTION -> stack.add(token)
+                Token.TOKEN_FUNCTION -> stack.push(token)
                 Token.TOKEN_SEPARATOR -> {
                     while (!stack.empty() && stack.peek().type != Token.TOKEN_PARENTHESES_OPEN.toInt()) {
                         output.add(stack.pop())
@@ -76,7 +74,7 @@ object ShuntingYard {
                         output.add(stack.pop())
                     }
                     stack.pop()
-                    if (!stack.isEmpty() && stack.peek().type == Token.TOKEN_FUNCTION.toInt()) {
+                    if (!stack.empty() && stack.peek().type == Token.TOKEN_FUNCTION.toInt()) {
                         output.add(stack.pop())
                     }
                 }

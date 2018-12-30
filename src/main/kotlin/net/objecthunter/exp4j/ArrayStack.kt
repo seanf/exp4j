@@ -16,8 +16,6 @@
 
 package net.objecthunter.exp4j
 
-import java.util.EmptyStackException
-
 /**
  * Simple double stack using a double array as data storage
  *
@@ -70,3 +68,5 @@ internal class ArrayStack @JvmOverloads constructor(initialCapacity: Int = 5) {
         return idx + 1
     }
 }
+
+class EmptyStackException: RuntimeException()

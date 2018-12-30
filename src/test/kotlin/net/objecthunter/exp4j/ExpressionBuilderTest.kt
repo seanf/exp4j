@@ -16,19 +16,22 @@
 
 package net.objecthunter.exp4j
 
-import java.lang.Math.*
 import org.junit.Assert.*
 
-import java.util.HashMap
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
 import java.util.stream.IntStream
 
 import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.operator.Operator
 
 import org.junit.Test
+import kotlin.math.E
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.ln
+import kotlin.math.ln1p
+import kotlin.math.log
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class ExpressionBuilderTest {
 
@@ -63,7 +66,7 @@ class ExpressionBuilderTest {
                 .setVariable("x", x)
                 .evaluate()
 
-        val expected = sin(x) - log(3 * x / 4)
+        val expected = sin(x) - ln(3 * x / 4)
         assertEquals(expected, result, 0.0)
     }
 
@@ -602,7 +605,7 @@ class ExpressionBuilderTest {
         val minFunction = object : Function("min", 2) {
 
             override fun apply(values: DoubleArray): Double {
-                var currentMin = java.lang.Double.POSITIVE_INFINITY
+                var currentMin = Double.POSITIVE_INFINITY
                 for (value in values) {
                     currentMin = Math.min(currentMin, value)
                 }
@@ -1618,20 +1621,6 @@ class ExpressionBuilderTest {
 
     @Test
     @Throws(Exception::class)
-    fun testDocumentationExample2() {
-        val exec = Executors.newFixedThreadPool(1)
-        val e = ExpressionBuilder("3log(y)/(x+1)")
-                .variables("x", "y")
-                .build()
-                .setVariable("x", 2.3)
-                .setVariable("y", 3.14)
-        val result = e.evaluateAsync(exec)
-        val expected = 3 * Math.log(3.14) / 3.3
-        assertEquals(expected, result.get(), 0.0)
-    }
-
-    @Test
-    @Throws(Exception::class)
     fun testDocumentationExample3() {
         val result = ExpressionBuilder("2cos(xy)")
                 .variables("x", "y")
@@ -1655,7 +1644,7 @@ class ExpressionBuilderTest {
     @Throws(Exception::class)
     fun testDocumentationExample5() {
         val expr = "7.2973525698e-3"
-        val expected = java.lang.Double.parseDouble(expr)
+        val expected = expr.toDouble()
         val e = ExpressionBuilder(expr)
                 .build()
         assertEquals(expected, e.evaluate(), 0.0)
@@ -1801,7 +1790,7 @@ class ExpressionBuilderTest {
         val expr = "1 / 0"
         val e = ExpressionBuilder(expr)
                 .build()
-        assertTrue(java.lang.Double.POSITIVE_INFINITY == e.evaluate())
+        assertTrue(Double.POSITIVE_INFINITY == e.evaluate())
     }
 
     @Test
@@ -1810,7 +1799,7 @@ class ExpressionBuilderTest {
         val expr = "17 * sqrt(-1) * 12"
         val e = ExpressionBuilder(expr)
                 .build()
-        assertTrue(java.lang.Double.isNaN(e.evaluate()))
+        assertTrue(e.evaluate().isNaN())
     }
 
     // Thanks go out to Alex Dolinsky for reporting the missing exception when an empty
@@ -2060,7 +2049,7 @@ class ExpressionBuilderTest {
                 .build()
                 .setVariable("x", Math.E)
                 .setVariable("y", Math.sqrt(2.0))
-        assertEquals(cos(E * log(E * sqrt(2.0))), e.evaluate(), 0.0)
+        assertEquals(cos(E * ln(E * sqrt(2.0))), e.evaluate(), 0.0)
     }
 
     @Test
@@ -2245,7 +2234,7 @@ class ExpressionBuilderTest {
         expr = "log1p(1)"
         val e = ExpressionBuilder(expr)
                 .build()
-        assertEquals(log1p(1.0), e.evaluate(), 0.0)
+        assertEquals(ln1p(1.0), e.evaluate(), 0.0)
     }
 
     @Test
@@ -2398,8 +2387,8 @@ class ExpressionBuilderTest {
         var x = -10.0
         while (x < 10) {
             expected = Math.acos(x) * Math.expm1(Math.asin(x)) - Math.exp(Math.atan(x)) + Math.floor(x) + Math.cosh(x) - Math.sinh(Math.cbrt(x))
-            if (java.lang.Double.isNaN(expected)) {
-                assertTrue(java.lang.Double.isNaN(e.setVariable("x", x).evaluate()))
+            if (expected.isNaN()) {
+                assertTrue(e.setVariable("x", x).evaluate().isNaN())
             } else {
                 assertTrue(expected == e.setVariable("x", x).evaluate())
             }
@@ -2419,8 +2408,8 @@ class ExpressionBuilderTest {
         var x = -10.0
         while (x < 10) {
             expected = Math.acos(x)
-            if (java.lang.Double.isNaN(expected)) {
-                assertTrue(java.lang.Double.isNaN(e.setVariable("x", x).evaluate()))
+            if (expected.isNaN()) {
+                assertTrue(e.setVariable("x", x).evaluate().isNaN())
             } else {
                 assertTrue(expected == e.setVariable("x", x).evaluate())
             }
@@ -2440,8 +2429,8 @@ class ExpressionBuilderTest {
         var x = -10.0
         while (x < 10) {
             expected = Math.expm1(x)
-            if (java.lang.Double.isNaN(expected)) {
-                assertTrue(java.lang.Double.isNaN(e.setVariable("x", x).evaluate()))
+            if (expected.isNaN()) {
+                assertTrue(e.setVariable("x", x).evaluate().isNaN())
             } else {
                 assertTrue(expected == e.setVariable("x", x).evaluate())
             }
@@ -2461,8 +2450,8 @@ class ExpressionBuilderTest {
         var x = -10.0
         while (x < 10) {
             expected = Math.asin(x)
-            if (java.lang.Double.isNaN(expected)) {
-                assertTrue(java.lang.Double.isNaN(e.setVariable("x", x).evaluate()))
+            if (expected.isNaN()) {
+                assertTrue(e.setVariable("x", x).evaluate().isNaN())
             } else {
                 assertTrue(expected == e.setVariable("x", x).evaluate())
             }
@@ -2727,7 +2716,7 @@ class ExpressionBuilderTest {
                 .variable("ε")
                 .build()
                 .setVariable("ε", E)
-        assertEquals(log(3 * E + 1), e.evaluate(), 0.0)
+        assertEquals(ln(3 * E + 1), e.evaluate(), 0.0)
     }
 
     @Test
@@ -2736,7 +2725,7 @@ class ExpressionBuilderTest {
         val log = object : Function("λωγ", 1) {
 
             override fun apply(vararg args: Double): Double {
-                return log(args[0])
+                return ln(args[0])
             }
         }
 
@@ -2745,7 +2734,7 @@ class ExpressionBuilderTest {
                 .function(log)
                 .build()
                 .setVariable("π", PI)
-        assertEquals(log(PI), e.evaluate(), 0.0)
+        assertEquals(ln(PI), e.evaluate(), 0.0)
     }
 
     @Test
@@ -2754,7 +2743,7 @@ class ExpressionBuilderTest {
         val log = object : Function("λ_ωγ", 1) {
 
             override fun apply(vararg args: Double): Double {
-                return log(args[0])
+                return ln(args[0])
             }
         }
 
@@ -2764,7 +2753,7 @@ class ExpressionBuilderTest {
                 .build()
                 .setVariable("π", PI)
                 .setVariable("ε", E)
-        assertEquals(3 * log(PI * E * 6.0), e.evaluate(), 0.0)
+        assertEquals(3 * ln(PI * E * 6.0), e.evaluate(), 0.0)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -2845,7 +2834,7 @@ class ExpressionBuilderTest {
                 .variable("var_1")
                 .build()
                 .setVariable("var_1", 2.0)
-        assertEquals(2 * log(2.0), e.evaluate(), 0.0)
+        assertEquals(2 * ln(2.0), e.evaluate(), 0.0)
     }
 
     // thanks go out to vandanagopal for reporting the issue

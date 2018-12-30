@@ -24,10 +24,6 @@ import net.objecthunter.exp4j.TestUtil.assertOperatorToken
 import net.objecthunter.exp4j.TestUtil.assertVariableToken
 import org.junit.Assert.*
 
-import java.util.Arrays
-import java.util.HashMap
-import java.util.HashSet
-
 import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.operator.Operator
 
@@ -251,7 +247,7 @@ class TokenizerTest {
     @Test
     @Throws(Exception::class)
     fun testTokenization13() {
-        val tokenizer = Tokenizer("x", null, null, HashSet(Arrays.asList("x")))
+        val tokenizer = Tokenizer("x", null, null, setOf("x"))
 
         assertTrue(tokenizer.hasNext())
         assertVariableToken(tokenizer.nextToken(), "x")
@@ -262,7 +258,7 @@ class TokenizerTest {
     @Test
     @Throws(Exception::class)
     fun testTokenization14() {
-        val tokenizer = Tokenizer("2*x-log(3)", null, null, HashSet(Arrays.asList("x")))
+        val tokenizer = Tokenizer("2*x-log(3)", null, null, setOf("x"))
 
         assertTrue(tokenizer.hasNext())
         assertNumberToken(tokenizer.nextToken(), 2.0)
@@ -294,7 +290,7 @@ class TokenizerTest {
     @Test
     @Throws(Exception::class)
     fun testTokenization15() {
-        val tokenizer = Tokenizer("2*xlog+log(3)", null, null, HashSet(Arrays.asList("xlog")))
+        val tokenizer = Tokenizer("2*xlog+log(3)", null, null, setOf("xlog"))
 
         assertTrue(tokenizer.hasNext())
         assertNumberToken(tokenizer.nextToken(), 2.0)
@@ -326,7 +322,7 @@ class TokenizerTest {
     @Test
     @Throws(Exception::class)
     fun testTokenization16() {
-        val tokenizer = Tokenizer("2*x+-log(3)", null, null, HashSet(Arrays.asList("x")))
+        val tokenizer = Tokenizer("2*x+-log(3)", null, null, setOf("x"))
 
         assertTrue(tokenizer.hasNext())
         assertNumberToken(tokenizer.nextToken(), 2.0)
@@ -361,7 +357,7 @@ class TokenizerTest {
     @Test
     @Throws(Exception::class)
     fun testTokenization17() {
-        val tokenizer = Tokenizer("2 * x + -log(3)", null, null, HashSet(Arrays.asList("x")))
+        val tokenizer = Tokenizer("2 * x + -log(3)", null, null, setOf("x"))
 
         assertTrue(tokenizer.hasNext())
         assertNumberToken(tokenizer.nextToken(), 2.0)
@@ -485,7 +481,7 @@ class TokenizerTest {
     @Test
     @Throws(Exception::class)
     fun testTokenization21() {
-        val tokenizer = Tokenizer("log(x) - y * (sqrt(x^cos(y)))", null, null, HashSet(Arrays.asList("x", "y")))
+        val tokenizer = Tokenizer("log(x) - y * (sqrt(x^cos(y)))", null, null, setOf("x", "y"))
 
         assertTrue(tokenizer.hasNext())
         assertFunctionToken(tokenizer.nextToken(), "log", 1)

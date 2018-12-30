@@ -19,7 +19,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 
-import java.util.EmptyStackException
 import java.util.stream.IntStream
 
 import org.junit.Test
@@ -33,7 +32,7 @@ class ArrayStackTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun testConstructor() {
-        val stack = ArrayStack(-1)
+        ArrayStack(-1)
     }
 
     @Test

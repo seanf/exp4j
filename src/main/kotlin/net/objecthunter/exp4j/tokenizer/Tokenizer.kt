@@ -225,7 +225,7 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
         var len = 1
         this.pos++
         if (isEndOfExpression(offset + len)) {
-            lastToken = NumberToken(java.lang.Double.parseDouble(firstChar.toString()))
+            lastToken = NumberToken(firstChar.toString().toDouble())
             return lastToken!!
         }
         while (!isEndOfExpression(offset + len) && isNumeric(expression[offset + len], expression[offset + len - 1] == 'e' || expression[offset + len - 1] == 'E')) {

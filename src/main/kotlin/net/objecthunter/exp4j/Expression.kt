@@ -15,24 +15,12 @@
  */
 package net.objecthunter.exp4j
 
-import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.function.Functions
-import net.objecthunter.exp4j.operator.Operator
 import net.objecthunter.exp4j.tokenizer.FunctionToken
 import net.objecthunter.exp4j.tokenizer.NumberToken
 import net.objecthunter.exp4j.tokenizer.OperatorToken
 import net.objecthunter.exp4j.tokenizer.Token
 import net.objecthunter.exp4j.tokenizer.VariableToken
-
-import java.util.ArrayList
-import java.util.Arrays
-import java.util.Collections
-import java.util.HashMap
-import java.util.HashSet
-import java.util.TreeSet
-import java.util.concurrent.Callable
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Future
 
 class Expression {
 
@@ -67,7 +55,7 @@ class Expression {
      * @param existing the expression to copy
      */
     constructor(existing: Expression) {
-        this.tokens = Arrays.copyOf(existing.tokens, existing.tokens.size)
+        this.tokens = existing.tokens.copyOf()
         this.variables = HashMap()
         this.variables.putAll(existing.variables)
         this.userFunctionNames = HashSet(existing.userFunctionNames)
@@ -87,7 +75,7 @@ class Expression {
 
     fun setVariable(name: String, value: Double): Expression {
         this.checkVariableName(name)
-        this.variables[name] = java.lang.Double.valueOf(value)
+        this.variables[name] = value
         return this
     }
 
@@ -159,10 +147,6 @@ class Expression {
         }
         return if (errors.size == 0) ValidationResult.SUCCESS else ValidationResult(false, errors)
 
-    }
-
-    fun evaluateAsync(executor: ExecutorService): Future<Double> {
-        return executor.submit(Callable { evaluate() })
     }
 
     fun evaluate(): Double {

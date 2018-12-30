@@ -30,5 +30,5 @@ class NumberToken
          */
         val value: Double) : Token(Token.TOKEN_NUMBER) {
 
-    internal constructor(expression: CharArray, offset: Int, len: Int) : this(java.lang.Double.parseDouble(String(expression, offset, len))) {}
+    internal constructor(expression: CharArray, offset: Int, len: Int) : this(String(expression, offset, len).toDouble()) {}
 }

@@ -16,8 +16,6 @@
 
 package net.objecthunter.exp4j
 
-import java.util.*
-
 import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.function.Functions
 import net.objecthunter.exp4j.operator.Operator
@@ -75,7 +73,7 @@ class ExpressionBuilder
 
     /**
      * Add multiple [net.objecthunter.exp4j.function.Function] implementations available for use in the expression
-     * @param functions A [java.util.List] of custom [net.objecthunter.exp4j.function.Function] implementations
+     * @param functions A [List] of custom [net.objecthunter.exp4j.function.Function] implementations
      * @return the ExpressionBuilder instance
      */
     fun functions(functions: List<Function>): ExpressionBuilder {
@@ -101,7 +99,7 @@ class ExpressionBuilder
      * @return the ExpressionBuilder instance
      */
     fun variables(vararg variableNames: String): ExpressionBuilder {
-        Collections.addAll(this.variableNames, *variableNames)
+        this.variableNames.addAll(variableNames)
         return this
     }
 
@@ -154,7 +152,7 @@ class ExpressionBuilder
 
     /**
      * Add multiple [net.objecthunter.exp4j.operator.Operator] implementations which should be available for use in the expression
-     * @param operators the [java.util.List] of custom [net.objecthunter.exp4j.operator.Operator] implementations to add
+     * @param operators the [List] of custom [net.objecthunter.exp4j.operator.Operator] implementations to add
      * @return the ExpressionBuilder instance
      */
     fun operator(operators: List<Operator>): ExpressionBuilder {

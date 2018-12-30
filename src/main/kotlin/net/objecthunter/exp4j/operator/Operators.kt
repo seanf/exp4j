@@ -15,8 +15,6 @@
 */
 package net.objecthunter.exp4j.operator
 
-import java.lang.RuntimeException
-
 object Operators {
     private val INDEX_ADDITION = 0
     private val INDEX_SUBTRACTION = 1
