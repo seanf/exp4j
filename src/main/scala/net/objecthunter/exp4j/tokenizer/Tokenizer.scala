@@ -30,10 +30,12 @@
 package net.objecthunter.exp4j.tokenizer
 
 import java.util
+import net.objecthunter.exp4j.function
 import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.function.Functions
 import net.objecthunter.exp4j.operator.Operator
 import net.objecthunter.exp4j.operator.Operators
+import scala.util.control.Breaks._
 
 object Tokenizer {
   private def isNumeric(ch: Char, lastCharE: Boolean) = Character.isDigit(ch) || ch == '.' || ch == 'e' || ch == 'E' || (lastCharE && (ch == '-' || ch == '+'))
@@ -44,16 +46,16 @@ object Tokenizer {
 }
 
 class Tokenizer {
-  final private var expression = null
-  final private var expressionLength = 0
-  final private var userFunctions = null
-  final private var userOperators = null
-  final private var variableNames = null
+  final private var expression: Array[Char] = null
+  final private var expressionLength: Int = 0
+  final private var userFunctions: util.Map[String, function.Function] = null
+  final private var userOperators: util.Map[String, Operator] = null
+  final private var variableNames: util.Set[String] = null
   final private var implicitMultiplication = false
   private var pos = 0
-  private var lastToken = null
+  private var lastToken: Token = null
 
-  def this(expression: String, userFunctions: util.Map[String, Function], userOperators: util.Map[String, Operator], variableNames: util.Set[String], implicitMultiplication: Boolean) {
+  def this(expression: String, userFunctions: util.Map[String, function.Function], userOperators: util.Map[String, Operator], variableNames: util.Set[String], implicitMultiplication: Boolean) {
     this()
     this.expression = expression.trim.toCharArray
     this.expressionLength = this.expression.length
@@ -63,7 +65,7 @@ class Tokenizer {
     this.implicitMultiplication = implicitMultiplication
   }
 
-  def this(expression: String, userFunctions: util.Map[String, Function], userOperators: util.Map[String, Operator], variableNames: util.Set[String]) {
+  def this(expression: String, userFunctions: util.Map[String, function.Function], userOperators: util.Map[String, Operator], variableNames: util.Set[String]) {
     this()
     this.expression = expression.trim.toCharArray
     this.expressionLength = this.expression.length
@@ -133,7 +135,7 @@ class Tokenizer {
     val offset = this.pos
     var testPos = 0
     var lastValidLen = 1
-    var lastValidToken = null
+    var lastValidToken: Token = null
     var len = 1
     if (isEndOfExpression(offset)) this.pos += 1
     testPos = offset + len - 1
@@ -162,7 +164,7 @@ class Tokenizer {
   }
 
   private def getFunction(name: String) = {
-    var f = null
+    var f: function.Function = null
     if (this.userFunctions != null) f = this.userFunctions.get(name)
     if (f == null) f = Functions.getBuiltinFunction(name)
     f
@@ -172,21 +174,22 @@ class Tokenizer {
     val offset = this.pos
     var len = 1
     val symbol = new StringBuilder
-    var lastValid = null
+    var lastValid: Operator = null
     symbol.append(firstChar)
     while ( {
       !isEndOfExpression(offset + len) && Operator.isAllowedOperatorChar(expression(offset + len))
     }) symbol.append(expression(offset + {
       len += 1; len - 1
     }))
-    while ( {
-      symbol.length > 0
-    }) {
-      val op = this.getOperator(symbol.toString)
-      if (op == null) symbol.setLength(symbol.length - 1)
-      else {
-        lastValid = op
-        break //todo: break is not supported
+    // TODO eliminate break
+    breakable {
+      while (symbol.nonEmpty) {
+        val op = this.getOperator(symbol.toString)
+        if (op == null) symbol.setLength(symbol.length - 1)
+        else {
+          lastValid = op
+          break
+        }
       }
     }
     pos += symbol.length
@@ -195,7 +198,7 @@ class Tokenizer {
   }
 
   private def getOperator(symbol: String) = {
-    var op = null
+    var op: Operator = null
     if (this.userOperators != null) op = this.userOperators.get(symbol)
     if (op == null && symbol.length == 1) {
       var argc = 2

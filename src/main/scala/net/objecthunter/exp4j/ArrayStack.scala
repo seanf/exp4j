@@ -38,12 +38,11 @@ import java.util.EmptyStackException
   */
 class ArrayStack private[exp4j](val initialCapacity: Int) {
   if (initialCapacity <= 0) throw new IllegalArgumentException("Stack's capacity must be positive")
-  data = new Array[Double](initialCapacity)
-  idx = -1
-  private var data = null
-  private var idx = 0
 
-  def this {
+  private var data:Array[Double] = new Array[Double](initialCapacity)
+  private var idx = -1
+
+  def this() {
     this(5)
   }
 

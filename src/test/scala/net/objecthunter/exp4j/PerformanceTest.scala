@@ -47,29 +47,29 @@ class PerformanceTest {
     val sb = new StringBuffer
     val fmt = new Formatter(sb)
     fmt.format("+------------------------+---------------------------+--------------------------+%n")
-    fmt.format("| %-22s | %-25s | %-24s |%n", "Implementation", "Calculations per Second", "Percentage of Math")
+    fmt.format("| %-22s | %-25s | %-24s |%n", "Implementation", "Calculations per Second", "Percentage of Java Math")
     fmt.format("+------------------------+---------------------------+--------------------------+%n")
     System.out.print(sb.toString)
     sb.setLength(0)
     val math = benchJavaMath
     val mathRate = math.toDouble / PerformanceTest.BENCH_TIME.toDouble
-    fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "Java Math", mathRate, 100f)
+    fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "Java Math", java.lang.Double.valueOf(mathRate), java.lang.Double.valueOf(100f))
     System.out.print(sb.toString)
     sb.setLength(0)
     val db = benchDouble
     val dbRate = db.toDouble / PerformanceTest.BENCH_TIME.toDouble
-    fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "exp4j", dbRate, dbRate * 100 / mathRate)
+    fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "exp4j", java.lang.Double.valueOf(dbRate), java.lang.Double.valueOf(dbRate * 100 / mathRate))
     System.out.print(sb.toString)
     sb.setLength(0)
     val js = benchJavaScript
     val jsRate = js.toDouble / PerformanceTest.BENCH_TIME.toDouble
-    fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "JSR-223 (Java Script)", jsRate, jsRate * 100 / mathRate)
+    fmt.format("| %-22s | %25.2f | %22.2f %% |%n", "JSR-223 (Java Script)", java.lang.Double.valueOf(jsRate), java.lang.Double.valueOf(jsRate * 100 / mathRate))
     fmt.format("+------------------------+---------------------------+--------------------------+%n")
     System.out.print(sb.toString)
   }
 
   private def benchDouble = {
-    val expression = new Nothing(PerformanceTest.EXPRESSION).variables("x", "y").build
+    val expression = new ExpressionBuilder(PerformanceTest.EXPRESSION).variables("x", "y").build
     var `val` = .0
     val rnd = new Random
     val timeout = PerformanceTest.BENCH_TIME

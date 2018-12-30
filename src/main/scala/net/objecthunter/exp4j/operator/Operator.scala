@@ -36,7 +36,7 @@ object Operator {
   /**
     * The precedence value for the addition operation
     */
-    val PRECEDENCE_ADDITION = 500
+  val PRECEDENCE_ADDITION = 500
   /**
     * The precedence value for the subtraction operation
     */
@@ -84,16 +84,16 @@ object Operator {
   }
 }
 
-abstract class Operator(val symbol: String, val numOperands: Int, val leftAssociative: Boolean, val precedence: Int)
-
 /**
+  * @constructor
   * Create a new operator for use in expressions
   *
   * @param symbol           the symbol of the operator
-  * @param numberOfOperands the number of operands the operator takes (1 or 2)
+  * @param numOperands the number of operands the operator takes (1 or 2)
   * @param leftAssociative  set to true if the operator is left associative, false if it is right associative
   * @param precedence       the precedence value of the operator
-  */ {
+  */
+abstract class Operator(val symbol: String, val numOperands: Int, val leftAssociative: Boolean, val precedence: Int) {
   /**
     * Check if the operator is left associative
     *

@@ -33,70 +33,22 @@ package net.objecthunter.exp4j.function
   * A class representing a Function which can be used in an expression
   */
 object Function {
-  /**
-    * Get the set of characters which are allowed for use in Function names.
-    *
-    * @return the set of characters allowed
-    * @deprecated since 0.4.5 All unicode letters are allowed to be used in function names since 0.4.3. This API
-    *             Function can be safely ignored. Checks for function name validity can be done using Character.isLetter() et al.
-    */
-    def getAllowedFunctionCharacters: Array[Char] = {
-      val chars = new Array[Char](53)
-      var count = 0
-      var i = 65
-      while ( {
-        i < 91
-      }) {
-        chars({
-          count += 1; count - 1
-        }) = i.toChar
-        {
-          i += 1; i - 1
-        }
-      }
-      var i = 97
-      while ( {
-        i < 123
-      }) {
-        chars({
-          count += 1; count - 1
-        }) = i.toChar
-        {
-          i += 1; i - 1
-        }
-      }
-      chars(count) = '_'
-      chars
-    }
 
   def isValidFunctionName(name: String): Boolean = {
-    if (name == null) return false
-    val size = name.length
-    if (size == 0) return false
-    var i = 0
-    while ( {
-      i < size
-    }) {
-      val c = name.charAt(i)
-      if (Character.isLetter(c) || c == '_') continue //todo: continue is not supported
-      else if (Character.isDigit(c) && i > 0) continue //todo: continue is not supported
-      return false
-      {
-        i += 1; i - 1
-      }
-    }
-    true
+    if (name == null || name.isEmpty) return false
+    if (Character.isDigit(name.charAt(0))) return false
+    return name.forall(c => Character.isLetter(c) || c == '_' || Character.isDigit(c))
   }
 }
 
-abstract class Function(val name: String, val numArguments: Int)
-
 /**
+  * @constructor
   * Create a new Function with a given name and number of arguments
   *
   * @param name         the name of the Function
   * @param numArguments the number of arguments the function takes
-  */ {
+  */
+abstract class Function(val name: String, val numArguments: Int) {
   if (numArguments < 0) throw new IllegalArgumentException("The number of function arguments can not be less than 0 for '" + name + "'")
   if (!Function.isValidFunctionName(name)) throw new IllegalArgumentException("The function name '" + name + "' is invalid")
 

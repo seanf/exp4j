@@ -41,11 +41,11 @@ import org.junit.Test
   */
 class ArrayStackTest() {
   @Test(expected = classOf[IllegalArgumentException]) def testConstructor(): Unit = {
-    val stack = new Nothing(-1)
+    val stack = new ArrayStack(-1)
   }
 
   @Test def testPushNoSize(): Unit = {
-    val stack = new Nothing
+    val stack = new ArrayStack
     stack.push(0)
     stack.push(1)
     stack.push(3)
@@ -53,114 +53,67 @@ class ArrayStackTest() {
   }
 
   @Test def testPushLessSize(): Unit = {
-    val stack = new Nothing(5)
-    var i = 0
-    while ( {
-      i < 5
-    }) {
-      stack.push(i)
-      {
-        i += 1; i - 1
-      }
-    }
+    val stack = new ArrayStack(5)
+    for (i <- 0 to 4) stack.push(i)
     assertEquals(5, stack.size)
   }
 
   @Test def testPeek(): Unit = {
-    val stack = new Nothing(5)
-    var i = 0
-    while ( {
-      i < 5
-    }) {
-      stack.push(i)
-      {
-        i += 1; i - 1
-      }
-    }
+    val stack = new ArrayStack(5)
+    for (i <- 0 to 4) stack.push(i)
     assertEquals(4d, stack.peek, 0d)
     assertEquals(4d, stack.peek, 0d)
     assertEquals(4d, stack.peek, 0d)
   }
 
   @Test def testPeek2(): Unit = {
-    val stack = new Nothing(5)
+    val stack = new ArrayStack(5)
     stack.push(-1)
-    var old = -1
-    var i = 0
-    while ( {
-      i < 5
-    }) {
+    var old = -1d
+
+    for (i <- 0 to 4) {
       assertEquals(old, stack.peek, 0d)
       stack.push(i)
       old = i
       assertEquals(old, stack.peek, 0d)
-      {
-        i += 1; i - 1
-      }
     }
   }
 
   @Test(expected = classOf[EmptyStackException]) def testPeekNoData(): Unit = {
-    val stack = new Nothing(5)
+    val stack = new ArrayStack(5)
     stack.peek
   }
 
   @Test def testPop(): Unit = {
-    val stack = new Nothing(5)
-    var i = 0
-    while ( {
-      i < 5
-    }) {
-      stack.push(i)
-      {
-        i += 1; i - 1
-      }
-    }
-    while ( {
-      !stack.isEmpty
-    }) stack.pop
+    val stack = new ArrayStack(5)
+    for (i <- 0 to 4) stack.push(i)
+    while (!stack.isEmpty) stack.pop
   }
 
   @Test(expected = classOf[EmptyStackException]) def testPop2(): Unit = {
-    val stack = new Nothing(5)
-    var i = 0
-    while ( {
-      i < 5
-    }) {
-      stack.push(i)
-      {
-        i += 1; i - 1
-      }
-    }
-    while ( {
-      true
-    }) stack.pop
+    val stack = new ArrayStack(5)
+    for (i <- 0 to 4) stack.push(i)
+    while (true) stack.pop
   }
 
   @Test def testPop3(): Unit = {
-    val stack = new Nothing(5)
-    var i = 0
-    while ( {
-      i < 5
-    }) {
+    val stack = new ArrayStack(5)
+    for (i <- 0 to 4) {
       stack.push(i)
       assertEquals(1, stack.size)
       assertEquals(i, stack.pop, 0d)
-      {
-        i += 1; i - 1
-      }
     }
     assertEquals(0, stack.size)
     assertTrue(stack.isEmpty)
   }
 
   @Test(expected = classOf[EmptyStackException]) def testPopNoData(): Unit = {
-    val stack = new Nothing(5)
+    val stack = new ArrayStack(5)
     stack.pop
   }
 
   @Test def testIsEmpty(): Unit = {
-    val stack = new Nothing(5)
+    val stack = new ArrayStack(5)
     assertTrue(stack.isEmpty)
     stack.push(4)
     assertFalse(stack.isEmpty)
@@ -181,7 +134,7 @@ class ArrayStackTest() {
   }
 
   @Test def testSize(): Unit = {
-    val stack = new Nothing(5)
+    val stack = new ArrayStack(5)
     assertEquals(0, stack.size)
     stack.push(4)
     assertEquals(1, stack.size)

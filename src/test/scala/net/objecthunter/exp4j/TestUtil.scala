@@ -34,33 +34,33 @@ import net.objecthunter.exp4j.tokenizer._
 import org.junit.Assert
 
 object TestUtil {
-  def assertVariableToken(token: Nothing, name: String): Unit = {
+  def assertVariableToken(token: Token, name: String): Unit = {
     assertEquals(Token.TOKEN_VARIABLE, token.getType)
-    Assert.assertEquals(name, token.asInstanceOf[Nothing].getName)
+    Assert.assertEquals(name, token.asInstanceOf[VariableToken].getName)
   }
 
-  def assertOpenParenthesesToken(token: Nothing): Unit = assertEquals(Token.TOKEN_PARENTHESES_OPEN, token.getType)
+  def assertOpenParenthesesToken(token: Token): Unit = assertEquals(Token.TOKEN_PARENTHESES_OPEN, token.getType)
 
-  def assertCloseParenthesesToken(token: Nothing): Unit = assertEquals(Token.TOKEN_PARENTHESES_CLOSE, token.getType)
+  def assertCloseParenthesesToken(token: Token): Unit = assertEquals(Token.TOKEN_PARENTHESES_CLOSE, token.getType)
 
-  def assertFunctionToken(token: Nothing, name: String, i: Int): Unit = {
+  def assertFunctionToken(token: Token, name: String, i: Int): Unit = {
     assertEquals(token.getType, Token.TOKEN_FUNCTION)
-    val f = token.asInstanceOf[Nothing]
+    val f = token.asInstanceOf[FunctionToken]
     assertEquals(i, f.getFunction.getNumArguments)
     assertEquals(name, f.getFunction.getName)
   }
 
-  def assertOperatorToken(tok: Nothing, symbol: String, numArgs: Int, precedence: Int): Unit = {
-    assertEquals(tok.getType, Token.TOKEN_OPERATOR)
-    Assert.assertEquals(numArgs, tok.asInstanceOf[Nothing].getOperator.getNumOperands)
-    assertEquals(symbol, tok.asInstanceOf[Nothing].getOperator.getSymbol)
-    assertEquals(precedence, tok.asInstanceOf[Nothing].getOperator.getPrecedence)
+  def assertOperatorToken(tok: Token, expectSymbol: String, expectNumOperands: Int, expectPrecedence: Int): Unit = {
+    assertEquals("token type", Token.TOKEN_OPERATOR, tok.getType)
+    assertEquals("numOperands", expectNumOperands, tok.asInstanceOf[OperatorToken].getOperator.getNumOperands)
+    assertEquals("symbol", expectSymbol, tok.asInstanceOf[OperatorToken].getOperator.getSymbol)
+    assertEquals("precedence", expectPrecedence, tok.asInstanceOf[OperatorToken].getOperator.getPrecedence)
   }
 
-  def assertNumberToken(tok: Nothing, v: Double): Unit = {
+  def assertNumberToken(tok: Token, v: Double): Unit = {
     assertEquals(tok.getType, Token.TOKEN_NUMBER)
-    Assert.assertEquals(v, tok.asInstanceOf[Nothing].getValue, 0d)
+    Assert.assertEquals(v, tok.asInstanceOf[NumberToken].getValue, 0d)
   }
 
-  def assertFunctionSeparatorToken(t: Nothing): Unit = assertEquals(t.getType, Token.TOKEN_SEPARATOR)
+  def assertFunctionSeparatorToken(t: Token): Unit = assertEquals(t.getType, Token.TOKEN_SEPARATOR)
 }

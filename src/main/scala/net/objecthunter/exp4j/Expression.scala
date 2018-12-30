@@ -29,7 +29,6 @@
  */
 package net.objecthunter.exp4j
 
-import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.function.Functions
 import net.objecthunter.exp4j.operator.Operator
 import net.objecthunter.exp4j.tokenizer.FunctionToken
@@ -38,6 +37,7 @@ import net.objecthunter.exp4j.tokenizer.OperatorToken
 import net.objecthunter.exp4j.tokenizer.Token
 import net.objecthunter.exp4j.tokenizer.VariableToken
 import java.util
+import java.util._
 import java.util.Collections
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
@@ -45,7 +45,7 @@ import java.util.concurrent.Future
 
 object Expression {
   private def createDefaultVariables = {
-    val vars = new util.HashMap[String, Double](4)
+    val vars = new HashMap[String, java.lang.Double](4)
     vars.put("pi", Math.PI)
     vars.put("π", Math.PI)
     vars.put("φ", 1.61803398874d)
@@ -55,9 +55,9 @@ object Expression {
 }
 
 class Expression {
-  final private var tokens = null
-  final private var variables = null
-  final private var userFunctionNames = null
+  final private var tokens: Array[Token] = null
+  final private var variables: Map[String, java.lang.Double] = null
+  final private var userFunctionNames: Set[String] = null
 
   /**
     * Creates a new expression that is a copy of the existing one.
@@ -66,38 +66,35 @@ class Expression {
     */
   def this(existing: Expression) {
     this()
-    this.tokens = util.Arrays.copyOf(existing.tokens, existing.tokens.length)
-    this.variables = new util.HashMap[String, Double]
+    this.tokens = Arrays.copyOf(existing.tokens, existing.tokens.length)
+    this.variables = new HashMap[String, java.lang.Double]
     this.variables.putAll(existing.variables)
     this.userFunctionNames = new util.HashSet[String](existing.userFunctionNames)
   }
 
-  def this(tokens: Array[Token]) {
-    this()
-    this.tokens = tokens
-    this.variables = Expression.createDefaultVariables
-    this.userFunctionNames = Collections.emptySet[String]
-  }
-
-  def this(tokens: Array[Token], userFunctionNames: util.Set[String]) {
+  def this(tokens: Array[Token], userFunctionNames: Set[String]) {
     this()
     this.tokens = tokens
     this.variables = Expression.createDefaultVariables
     this.userFunctionNames = userFunctionNames
   }
 
+  def this(tokens: Array[Token]) {
+    this(tokens, Collections.emptySet[String])
+  }
+
   def setVariable(name: String, value: Double): Expression = {
     this.checkVariableName(name)
-    this.variables.put(name, Double.valueOf(value))
+    this.variables.put(name, java.lang.Double.valueOf(value))
     this
   }
 
   private def checkVariableName(name: String) = if (this.userFunctionNames.contains(name) || Functions.getBuiltinFunction(name) != null) throw new IllegalArgumentException("The variable name '" + name + "' is invalid. Since there exists a function with the same name")
 
-  def setVariables(variables: util.Map[String, Double]): Expression = {
-    import scala.collection.JavaConversions._
-    for (v <- variables.entrySet) {
-      this.setVariable(v.getKey, v.getValue)
+  def setVariables(variables: util.Map[String, java.lang.Double]): Expression = {
+    import scala.collection.JavaConverters._
+    for ((k, v) <- variables.asScala) {
+      this.setVariable(k, v)
     }
     this
   }
@@ -126,23 +123,19 @@ class Expression {
                have been processed */ var count = 0
     for (tok <- this.tokens) {
       tok.getType match {
-        case Token.TOKEN_NUMBER =>
-        case Token.TOKEN_VARIABLE =>
+        case Token.TOKEN_NUMBER | Token.TOKEN_VARIABLE =>
           count += 1
-          break //todo: break is not supported
         case Token.TOKEN_FUNCTION =>
-          val func = tok.asInstanceOf[FunctionToken].getFunction
+          val func: function.Function = tok.asInstanceOf[FunctionToken].getFunction
           val argsNum = func.getNumArguments
           if (argsNum > count) errors.add("Not enough arguments for '" + func.getName + "'")
           if (argsNum > 1) count -= argsNum - 1
           else if (argsNum == 0) { // see https://github.com/fasseg/exp4j/issues/59
             count += 1
           }
-          break //todo: break is not supported
         case Token.TOKEN_OPERATOR =>
-          val op = tok.asInstanceOf[OperatorToken].getOperator
+          val op: Operator = tok.asInstanceOf[OperatorToken].getOperator
           if (op.getNumOperands == 2) count -= 1
-          break //todo: break is not supported
       }
       if (count < 1) {
         errors.add("Too many operators")
@@ -156,18 +149,15 @@ class Expression {
 
   def validate: ValidationResult = validate(true)
 
-  def evaluateAsync(executor: ExecutorService): Future[Double] = executor.submit(new Callable[Double]() {
+  def evaluateAsync(executor: ExecutorService): Future[java.lang.Double] = executor.submit(new Callable[java.lang.Double]() {
     @throws[Exception]
-    override def call: Double = return evaluate
+    override def call: java.lang.Double = return evaluate
   })
 
   def evaluate: Double = {
     val output = new ArrayStack
     var i = 0
-    while ( {
-      i < tokens.length
-    }) {
-      val t = tokens(i)
+    for (t <- tokens) {
       if (t.getType == Token.TOKEN_NUMBER) output.push(t.asInstanceOf[NumberToken].getValue)
       else if (t.getType == Token.TOKEN_VARIABLE) {
         val name = t.asInstanceOf[VariableToken].getName
@@ -192,20 +182,11 @@ class Expression {
         val func = t.asInstanceOf[FunctionToken]
         val numArguments = func.getFunction.getNumArguments
         if (output.size < numArguments) throw new IllegalArgumentException("Invalid number of arguments available for '" + func.getFunction.getName + "' function")
-        /* collect the arguments from the stack */ val args = new Array[Double](numArguments)
-        var j = numArguments - 1
-        while ( {
-          j >= 0
-        }) {
-          args(j) = output.pop
-          {
-            j -= 1; j + 1
-          }
-        }
-        output.push(func.getFunction.apply(args))
-      }
-      {
-        i += 1; i - 1
+        /* collect the arguments from the stack */
+        val args = new Array[Double](numArguments)
+        for (j <- numArguments - 1 to 0 by -1) args(j) = output.pop
+
+        output.push(func.getFunction.apply(args:_*))
       }
     }
     if (output.size > 1) throw new IllegalArgumentException("Invalid number of items on the output queue. Might be caused by an invalid number of arguments for a function.")

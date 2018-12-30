@@ -40,7 +40,7 @@ class FunctionsTest {
   @Test(expected = classOf[IllegalArgumentException])
   @throws[Exception]
   def testFunctionNameNull(): Unit = {
-    val f = new Nothing(null) {
+    val f = new Function(null) {
       def apply(args: Double*) = 0
     }
   }
@@ -48,7 +48,7 @@ class FunctionsTest {
   @Test(expected = classOf[IllegalArgumentException])
   @throws[Exception]
   def testFunctionNameEmpty(): Unit = {
-    val f = new Nothing("") {
+    val f = new Function("") {
       def apply(args: Double*) = 0
     }
   }
@@ -56,16 +56,16 @@ class FunctionsTest {
   @Test
   @throws[Exception]
   def testFunctionNameZeroArgs(): Unit = {
-    val f = new Nothing(("foo", 0)) {
+    val f = new Function("foo", 0) {
       def apply(args: Double*) = 0
     }
-    assertEquals(0f, f.apply, 0f)
+    assertEquals(0f, f.apply(), 0f)
   }
 
   @Test(expected = classOf[IllegalArgumentException])
   @throws[Exception]
   def testFunctionNameNegativeArgs(): Unit = {
-    val f = new Nothing(("foo", -1)) {
+    val f = new Function("foo", -1) {
       def apply(args: Double*) = 0
     }
   }
@@ -73,7 +73,7 @@ class FunctionsTest {
   @Test(expected = classOf[IllegalArgumentException])
   @throws[Exception]
   def testIllegalFunctionName1(): Unit = {
-    val f = new Nothing("1foo") {
+    val f = new Function("1foo") {
       def apply(args: Double*) = 0
     }
   }
@@ -81,7 +81,7 @@ class FunctionsTest {
   @Test(expected = classOf[IllegalArgumentException])
   @throws[Exception]
   def testIllegalFunctionName2(): Unit = {
-    val f = new Nothing("_&oo") {
+    val f = new Function("_&oo") {
       def apply(args: Double*) = 0
     }
   }
@@ -89,68 +89,9 @@ class FunctionsTest {
   @Test(expected = classOf[IllegalArgumentException])
   @throws[Exception]
   def testIllegalFunctionName3(): Unit = {
-    val f = new Nothing("o+o") {
+    val f = new Function("o+o") {
       def apply(args: Double*) = 0
     }
-  }
-
-  @Test def testGetAllowedFunctionChars(): Unit = {
-    val chars = Function.getAllowedFunctionCharacters
-    assertEquals(53, chars.length)
-    util.Arrays.sort(chars)
-    assertTrue(util.Arrays.binarySearch(chars, 'a') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'b') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'c') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'd') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'e') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'f') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'g') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'h') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'i') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'j') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'k') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'l') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'm') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'n') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'o') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'p') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'q') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'r') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 's') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 't') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'u') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'v') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'w') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'x') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'y') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'z') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'A') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'B') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'C') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'D') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'E') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'F') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'G') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'H') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'I') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'J') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'K') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'L') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'M') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'N') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'O') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'P') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'Q') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'R') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'S') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'T') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'U') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'V') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'W') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'X') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'Y') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, 'Z') > -1)
-    assertTrue(util.Arrays.binarySearch(chars, '_') > -1)
   }
 
   @Test def testCheckFunctionNames(): Unit = {

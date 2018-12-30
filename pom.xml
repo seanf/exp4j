@@ -250,6 +250,9 @@
                     <args>
                         <!-- work-around for https://issues.scala-lang.org/browse/SI-8358 -->
                         <arg>-nobootcp</arg>
+
+                        <arg>-deprecation</arg>
+                        <arg>-feature</arg>
                     </args>
                 </configuration>
             </plugin>

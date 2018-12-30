@@ -105,25 +105,19 @@ class ShuntingYardTest {
   @throws[Exception]
   def testShuntingYard7(): Unit = {
     val expression = "2^-2!"
-    val factorial = new Nothing(("!", 1, true, Operator.PRECEDENCE_POWER + 1)) {
+    val factorial = new Operator("!", 1, true, Operator.PRECEDENCE_POWER + 1) {
       def apply(args: Double*): Double = {
         val arg = args(0).toInt
         if (arg.toDouble != args(0)) throw new IllegalArgumentException("Operand for factorial has to be an integer")
         if (arg < 0) throw new IllegalArgumentException("The operand of the factorial can not be less than zero")
-        var result = 1
-        var i = 1
-        while ( {
-          i <= arg
-        }) {
+        var result = 1d
+        for (i <- 1 to arg) {
           result *= i
-          {
-            i += 1; i - 1
-          }
         }
         result
       }
     }
-    val userOperators = new util.HashMap[String, Nothing]
+    val userOperators = new util.HashMap[String, Operator]
     userOperators.put("!", factorial)
     val tokens = ShuntingYard.convertToRPN(expression, null, userOperators, null, true)
     assertNumberToken(tokens(0), 2d)
@@ -147,13 +141,13 @@ class ShuntingYardTest {
   @Test
   @throws[Exception]
   def testShuntingYard9(): Unit = {
-    val reciprocal = new Nothing(("$", 1, true, Operator.PRECEDENCE_DIVISION)) {
+    val reciprocal = new Operator("$", 1, true, Operator.PRECEDENCE_DIVISION) {
       def apply(args: Double*): Double = {
         if (args(0) == 0d) throw new ArithmeticException("Division by zero!")
         1d / args(0)
       }
     }
-    val userOperators = new util.HashMap[String, Nothing]
+    val userOperators = new util.HashMap[String, Operator]
     userOperators.put("$", reciprocal)
     val tokens = ShuntingYard.convertToRPN("1$", null, userOperators, null, true)
     assertNumberToken(tokens(0), 1d)

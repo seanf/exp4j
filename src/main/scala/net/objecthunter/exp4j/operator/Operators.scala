@@ -59,31 +59,31 @@ object Operators {
       null
   }
 
-  try builtinOperators(INDEX_ADDITION) = new Operator(("+", 2, true, Operator.PRECEDENCE_ADDITION)) {
+  builtinOperators(INDEX_ADDITION) = new Operator("+", 2, true, Operator.PRECEDENCE_ADDITION) {
     override def apply(args: Double*): Double = args(0) + args(1)
   }
-  builtinOperators(INDEX_SUBTRACTION) = new Operator(("-", 2, true, Operator.PRECEDENCE_ADDITION)) {
+  builtinOperators(INDEX_SUBTRACTION) = new Operator("-", 2, true, Operator.PRECEDENCE_ADDITION) {
     override def apply(args: Double*): Double = args(0) - args(1)
   }
-  builtinOperators(INDEX_UNARYMINUS) = new Operator(("-", 1, false, Operator.PRECEDENCE_UNARY_MINUS)) {
+  builtinOperators(INDEX_UNARYMINUS) = new Operator("-", 1, false, Operator.PRECEDENCE_UNARY_MINUS) {
     override def apply(args: Double*): Double = -args(0)
   }
-  builtinOperators(INDEX_UNARYPLUS) = new Operator(("+", 1, false, Operator.PRECEDENCE_UNARY_PLUS)) {
+  builtinOperators(INDEX_UNARYPLUS) = new Operator("+", 1, false, Operator.PRECEDENCE_UNARY_PLUS) {
     override def apply(args: Double*): Double = args(0)
   }
-  builtinOperators(INDEX_MUTLIPLICATION) = new Operator(("*", 2, true, Operator.PRECEDENCE_MULTIPLICATION)) {
+  builtinOperators(INDEX_MUTLIPLICATION) = new Operator("*", 2, true, Operator.PRECEDENCE_MULTIPLICATION) {
     override def apply(args: Double*): Double = args(0) * args(1)
   }
-  builtinOperators(INDEX_DIVISION) = new Operator(("/", 2, true, Operator.PRECEDENCE_DIVISION)) {
+  builtinOperators(INDEX_DIVISION) = new Operator("/", 2, true, Operator.PRECEDENCE_DIVISION) {
     override def apply(args: Double*): Double = {
       if (args(1) == 0d) throw new ArithmeticException("Division by zero!")
       args(0) / args(1)
     }
   }
-  builtinOperators(INDEX_POWER) = new Operator(("^", 2, false, Operator.PRECEDENCE_POWER)) {
+  builtinOperators(INDEX_POWER) = new Operator("^", 2, false, Operator.PRECEDENCE_POWER) {
     override def apply(args: Double*): Double = Math.pow(args(0), args(1))
   }
-  builtinOperators(INDEX_MODULO) = new Operator(("%", 2, true, Operator.PRECEDENCE_MODULO)) {
+  builtinOperators(INDEX_MODULO) = new Operator("%", 2, true, Operator.PRECEDENCE_MODULO) {
     override def apply(args: Double*): Double = {
       if (args(1) == 0d) throw new ArithmeticException("Division by zero!")
       args(0) % args(1)

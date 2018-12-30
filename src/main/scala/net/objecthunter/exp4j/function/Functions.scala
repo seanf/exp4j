@@ -89,7 +89,7 @@ object Functions {
   else if (name == "signum") builtinFunctions(INDEX_SGN)
   else null
 
-  try builtinFunctions(INDEX_SIN) = new Function("sin") {
+  builtinFunctions(INDEX_SIN) = new Function("sin") {
     override def apply(args: Double*): Double = Math.sin(args(0))
   }
   builtinFunctions(INDEX_COS) = new Function("cos") {
@@ -150,16 +150,16 @@ object Functions {
   builtinFunctions(INDEX_CEIL) = new Function("ceil") {
     override def apply(args: Double*): Double = Math.ceil(args(0))
   }
-  builtinFunctions(INDEX_POW) = new Function(("pow", 2)) {
+  builtinFunctions(INDEX_POW) = new Function("pow", 2) {
     override def apply(args: Double*): Double = Math.pow(args(0), args(1))
   }
-  builtinFunctions(INDEX_EXP) = new Function(("exp", 1)) {
+  builtinFunctions(INDEX_EXP) = new Function("exp", 1) {
     override def apply(args: Double*): Double = Math.exp(args(0))
   }
-  builtinFunctions(INDEX_EXPM1) = new Function(("expm1", 1)) {
+  builtinFunctions(INDEX_EXPM1) = new Function("expm1", 1) {
     override def apply(args: Double*): Double = Math.expm1(args(0))
   }
-  builtinFunctions(INDEX_SGN) = new Function(("signum", 1)) {
+  builtinFunctions(INDEX_SGN) = new Function("signum", 1) {
     override def apply(args: Double*): Double = if (args(0) > 0) 1
     else if (args(0) < 0) -1
     else 0

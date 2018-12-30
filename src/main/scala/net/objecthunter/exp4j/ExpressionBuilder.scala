@@ -38,21 +38,18 @@ import net.objecthunter.exp4j.shuntingyard.ShuntingYard
 /**
   * Factory class for {@link Expression} instances. This class is the main API entrypoint. Users should create new
   * {@link Expression} instances using this factory class.
-  */
-class ExpressionBuilder(val expression: String)
-
-/**
+  *
+  * @constructor
   * Create a new ExpressionBuilder instance and initialize it with a given expression string.
   *
   * @param expression the expression to be parsed
-  */ {
+  */
+class ExpressionBuilder(val expression: String) {
   if (expression == null || expression.trim.length == 0) throw new IllegalArgumentException("Expression can not be empty")
-  this.userOperators = new HashMap[String, Operator](4)
-  this.userFunctions = new HashMap[String, Function](4)
-  this.variableNames = new HashSet[String](4)
-  final private var userFunctions = null
-  final private var userOperators = null
-  final private var variableNames = null
+
+  final private val userOperators = new HashMap[String, Operator](4)
+  final private val userFunctions = new HashMap[String, Function](4)
+  final private val variableNames = new HashSet[String](4)
   private var implicitMultiplication = true
 
   /**
@@ -85,9 +82,9 @@ class ExpressionBuilder(val expression: String)
     * @param functions A { @link java.util.List} of custom { @link net.objecthunter.exp4j.function.Function} implementations
     * @return the ExpressionBuilder instance
     */
-  def functions(functions: util.List[Function]): ExpressionBuilder = {
-    import scala.collection.JavaConversions._
-    for (f <- functions) {
+  def functions(functions: List[Function]): ExpressionBuilder = {
+    import scala.collection.JavaConverters._
+    for (f <- functions.asScala) {
       this.userFunctions.put(f.getName, f)
     }
     this
@@ -99,13 +96,13 @@ class ExpressionBuilder(val expression: String)
     * @param variableNames the variables used in the expression
     * @return the ExpressionBuilder instance
     */
-  def variables(variableNames: util.Set[String]): ExpressionBuilder = {
+  def variables(variableNames: Set[String]): ExpressionBuilder = {
     this.variableNames.addAll(variableNames)
     this
   }
 
   def variables(variableNames: String*): ExpressionBuilder = {
-    Collections.addAll(this.variableNames, variableNames)
+    variableNames.foreach(this.variableNames.add)
     this
   }
 
@@ -163,9 +160,9 @@ class ExpressionBuilder(val expression: String)
     * @param operators the { @link java.util.List} of custom { @link net.objecthunter.exp4j.operator.Operator} implementations to add
     * @return the ExpressionBuilder instance
     */
-  def operator(operators: util.List[Operator]): ExpressionBuilder = {
-    import scala.collection.JavaConversions._
-    for (o <- operators) {
+  def operator(operators: List[Operator]): ExpressionBuilder = {
+    import scala.collection.JavaConverters._
+    for (o <- operators.asScala) {
       this.operator(o)
     }
     this
@@ -183,9 +180,9 @@ class ExpressionBuilder(val expression: String)
     variableNames.add("e")
     variableNames.add("φ")
     /* Check if there are duplicate vars/functions */
-    import scala.collection.JavaConversions._
-    for (`var` <- variableNames) {
-      if (Functions.getBuiltinFunction(`var`) != null || userFunctions.containsKey(`var`)) throw new IllegalArgumentException("A variable can not have the same name as a function [" + `var` + "]")
+    import scala.collection.JavaConverters._
+    for (v <- variableNames.asScala) {
+      if (Functions.getBuiltinFunction(v) != null || userFunctions.containsKey(v)) throw new IllegalArgumentException("A variable can not have the same name as a function [" + v + "]")
     }
     new Expression(ShuntingYard.convertToRPN(this.expression, this.userFunctions, this.userOperators, this.variableNames, this.implicitMultiplication), this.userFunctions.keySet)
   }

@@ -40,28 +40,28 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization1(): Unit = {
-    val tokenizer = new Nothing("1.222331", null, null, null)
+    val tokenizer = new Tokenizer("1.222331", null, null, null)
     assertNumberToken(tokenizer.nextToken, 1.222331d)
   }
 
   @Test
   @throws[Exception]
   def testTokenization2(): Unit = {
-    val tokenizer = new Nothing(".222331", null, null, null)
+    val tokenizer = new Tokenizer(".222331", null, null, null)
     assertNumberToken(tokenizer.nextToken, .222331d)
   }
 
   @Test
   @throws[Exception]
   def testTokenization3(): Unit = {
-    val tokenizer = new Nothing("3e2", null, null, null)
+    val tokenizer = new Tokenizer("3e2", null, null, null)
     assertNumberToken(tokenizer.nextToken, 300d)
   }
 
   @Test
   @throws[Exception]
   def testTokenization4(): Unit = {
-    val tokenizer = new Nothing("3+1", null, null, null)
+    val tokenizer = new Tokenizer("3+1", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 3d)
     assertTrue(tokenizer.hasNext)
@@ -74,7 +74,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization5(): Unit = {
-    val tokenizer = new Nothing("+3", null, null, null)
+    val tokenizer = new Tokenizer("+3", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertOperatorToken(tokenizer.nextToken, "+", 1, Operator.PRECEDENCE_UNARY_PLUS)
     assertTrue(tokenizer.hasNext)
@@ -85,7 +85,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization6(): Unit = {
-    val tokenizer = new Nothing("-3", null, null, null)
+    val tokenizer = new Tokenizer("-3", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertOperatorToken(tokenizer.nextToken, "-", 1, Operator.PRECEDENCE_UNARY_MINUS)
     assertTrue(tokenizer.hasNext)
@@ -96,7 +96,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization7(): Unit = {
-    val tokenizer = new Nothing("---++-3", null, null, null)
+    val tokenizer = new Tokenizer("---++-3", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertOperatorToken(tokenizer.nextToken, "-", 1, Operator.PRECEDENCE_UNARY_MINUS)
     assertTrue(tokenizer.hasNext)
@@ -117,7 +117,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization8(): Unit = {
-    val tokenizer = new Nothing("---++-3.004", null, null, null)
+    val tokenizer = new Tokenizer("---++-3.004", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertOperatorToken(tokenizer.nextToken, "-", 1, Operator.PRECEDENCE_UNARY_MINUS)
     assertTrue(tokenizer.hasNext)
@@ -138,7 +138,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization9(): Unit = {
-    val tokenizer = new Nothing("3+-1", null, null, null)
+    val tokenizer = new Tokenizer("3+-1", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 3d)
     assertTrue(tokenizer.hasNext)
@@ -153,7 +153,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization10(): Unit = {
-    val tokenizer = new Nothing("3+-1-.32++2", null, null, null)
+    val tokenizer = new Tokenizer("3+-1-.32++2", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 3d)
     assertTrue(tokenizer.hasNext)
@@ -178,7 +178,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization11(): Unit = {
-    val tokenizer = new Nothing("2+", null, null, null)
+    val tokenizer = new Tokenizer("2+", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 2d)
     assertTrue(tokenizer.hasNext)
@@ -189,7 +189,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization12(): Unit = {
-    val tokenizer = new Nothing("log(1)", null, null, null)
+    val tokenizer = new Tokenizer("log(1)", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertFunctionToken(tokenizer.nextToken, "log", 1)
     assertTrue(tokenizer.hasNext)
@@ -204,7 +204,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization13(): Unit = {
-    val tokenizer = new Nothing("x", null, null, new util.HashSet[String](util.Arrays.asList("x")))
+    val tokenizer = new Tokenizer("x", null, null, new util.HashSet[String](util.Arrays.asList("x")))
     assertTrue(tokenizer.hasNext)
     assertVariableToken(tokenizer.nextToken, "x")
     assertFalse(tokenizer.hasNext)
@@ -213,7 +213,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization14(): Unit = {
-    val tokenizer = new Nothing("2*x-log(3)", null, null, new util.HashSet[String](util.Arrays.asList("x")))
+    val tokenizer = new Tokenizer("2*x-log(3)", null, null, new util.HashSet[String](util.Arrays.asList("x")))
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 2d)
     assertTrue(tokenizer.hasNext)
@@ -236,7 +236,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization15(): Unit = {
-    val tokenizer = new Nothing("2*xlog+log(3)", null, null, new util.HashSet[String](util.Arrays.asList("xlog")))
+    val tokenizer = new Tokenizer("2*xlog+log(3)", null, null, new util.HashSet[String](util.Arrays.asList("xlog")))
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 2d)
     assertTrue(tokenizer.hasNext)
@@ -259,7 +259,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization16(): Unit = {
-    val tokenizer = new Nothing("2*x+-log(3)", null, null, new util.HashSet[String](util.Arrays.asList("x")))
+    val tokenizer = new Tokenizer("2*x+-log(3)", null, null, new util.HashSet[String](util.Arrays.asList("x")))
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 2d)
     assertTrue(tokenizer.hasNext)
@@ -284,7 +284,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization17(): Unit = {
-    val tokenizer = new Nothing("2 * x + -log(3)", null, null, new util.HashSet[String](util.Arrays.asList("x")))
+    val tokenizer = new Tokenizer("2 * x + -log(3)", null, null, new util.HashSet[String](util.Arrays.asList("x")))
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 2d)
     assertTrue(tokenizer.hasNext)
@@ -309,12 +309,12 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization18(): Unit = {
-    val log2 = new Nothing("log2") {
+    val log2 = new Function("log2") {
       def apply(args: Double*): Double = Math.log(args(0)) / Math.log(2d)
     }
-    val funcs = new util.HashMap[String, Nothing](1)
+    val funcs = new util.HashMap[String, Function](1)
     funcs.put(log2.getName, log2)
-    val tokenizer = new Nothing("log2(4)", funcs, null, null)
+    val tokenizer = new Tokenizer("log2(4)", funcs, null, null)
     assertTrue(tokenizer.hasNext)
     assertFunctionToken(tokenizer.nextToken, "log2", 1)
     assertTrue(tokenizer.hasNext)
@@ -329,18 +329,18 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization19(): Unit = {
-    val avg = new Nothing(("avg", 2)) {
+    val avg = new Function("avg", 2) {
       def apply(args: Double*): Double = {
-        var sum = 0
+        var sum: Double = 0
         for (arg <- args) {
           sum += arg
         }
         sum / args.length
       }
     }
-    val funcs = new util.HashMap[String, Nothing](1)
+    val funcs = new util.HashMap[String, Function](1)
     funcs.put(avg.getName, avg)
-    val tokenizer = new Nothing("avg(1,2)", funcs, null, null)
+    val tokenizer = new Tokenizer("avg(1,2)", funcs, null, null)
     assertTrue(tokenizer.hasNext)
     assertFunctionToken(tokenizer.nextToken, "avg", 2)
     assertTrue(tokenizer.hasNext)
@@ -359,12 +359,12 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization20(): Unit = {
-    val factorial = new Nothing(("!", 1, true, Operator.PRECEDENCE_POWER + 1)) {
+    val factorial = new Operator("!", 1, true, Operator.PRECEDENCE_POWER + 1) {
       def apply(args: Double*) = 0d
     }
-    val operators = new util.HashMap[String, Nothing](1)
+    val operators = new util.HashMap[String, Operator](1)
     operators.put(factorial.getSymbol, factorial)
-    val tokenizer = new Nothing("2!", null, operators, null)
+    val tokenizer = new Tokenizer("2!", null, operators, null)
     assertTrue(tokenizer.hasNext)
     assertNumberToken(tokenizer.nextToken, 2d)
     assertTrue(tokenizer.hasNext)
@@ -375,7 +375,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization21(): Unit = {
-    val tokenizer = new Nothing("log(x) - y * (sqrt(x^cos(y)))", null, null, new util.HashSet[String](util.Arrays.asList("x", "y")))
+    val tokenizer = new Tokenizer("log(x) - y * (sqrt(x^cos(y)))", null, null, new util.HashSet[String](util.Arrays.asList("x", "y")))
     assertTrue(tokenizer.hasNext)
     assertFunctionToken(tokenizer.nextToken, "log", 1)
     assertTrue(tokenizer.hasNext)
@@ -418,7 +418,7 @@ class TokenizerTest {
   @Test
   @throws[Exception]
   def testTokenization22(): Unit = {
-    val tokenizer = new Nothing("--2 * (-14)", null, null, null)
+    val tokenizer = new Tokenizer("--2 * (-14)", null, null, null)
     assertTrue(tokenizer.hasNext)
     assertOperatorToken(tokenizer.nextToken, "-", 1, Operator.PRECEDENCE_UNARY_MINUS)
     assertTrue(tokenizer.hasNext)

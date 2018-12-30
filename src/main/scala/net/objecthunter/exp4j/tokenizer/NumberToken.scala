@@ -39,7 +39,7 @@ final class NumberToken(val value: Double)
   *
   * @param value the value of the number
   */
-  extends Token(TOKEN_NUMBER) {
+  extends Token(Token.TOKEN_NUMBER) {
   def this(expression: Array[Char], offset: Int, len: Int) {
     this(String.valueOf(expression, offset, len).toDouble)
   }

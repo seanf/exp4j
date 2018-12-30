@@ -39,7 +39,7 @@ class VariableToken(val name: String)
   *
   * @param name the name of the setVariable
   */
-  extends Token(TOKEN_VARIABLE) {
+  extends Token(Token.TOKEN_VARIABLE) {
   /**
     * Get the name of the setVariable
     *

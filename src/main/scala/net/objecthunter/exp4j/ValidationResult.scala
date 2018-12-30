@@ -29,7 +29,7 @@
 */
 package net.objecthunter.exp4j
 
-import java.util
+import java.util.List
 
 /**
   * Contains the validation result for a given {@link Expression}
@@ -41,14 +41,13 @@ object ValidationResult {
     val SUCCESS = new ValidationResult(true, null)
 }
 
-class ValidationResult(val valid: Boolean, val errors: List[String])
-
 /**
-  * Create a new instance
+  * @constructor Create a new instance
   *
   * @param valid  Whether the validation of the expression was successful
   * @param errors The list of errors returned if the validation was unsuccessful
-  */ {
+  */
+class ValidationResult(val valid: Boolean, val errors: List[String]) {
   /**
     * Check if an expression has been validated successfully
     *
@@ -61,5 +60,5 @@ class ValidationResult(val valid: Boolean, val errors: List[String])
     *
     * @return The List of errors
     */
-  def getErrors: util.List[String] = errors
+  def getErrors: List[String] = errors
 }

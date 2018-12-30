@@ -47,27 +47,15 @@ class ConcurrencyTests {
     val results1 = new Array[Future[_]](numTests)
     val correct2 = new Array[Double](numTests)
     val results2 = new Array[Future[_]](numTests)
-    var i = 0
-    while ( {
-      i < numTests
-    }) {
+    for (i <- 0 until numTests) {
       correct1(i) = Math.sin(2 * Math.PI / (i + 1))
-      results1(i) = new Nothing("sin(2pi/(n+1))").variables("pi", "n").build.setVariable("pi", Math.PI).setVariable("n", i).evaluateAsync(exec)
+      results1(i) = new ExpressionBuilder("sin(2pi/(n+1))").variables("pi", "n").build.setVariable("pi", Math.PI).setVariable("n", i).evaluateAsync(exec)
       correct2(i) = Math.log(Math.E * Math.PI * (i + 1))
-      results2(i) = new Nothing("log(epi(n+1))").variables("pi", "n", "e").build.setVariable("pi", Math.PI).setVariable("e", Math.E).setVariable("n", i).evaluateAsync(exec)
-      {
-        i += 1; i - 1
-      }
+      results2(i) = new ExpressionBuilder("log(epi(n+1))").variables("pi", "n", "e").build.setVariable("pi", Math.PI).setVariable("e", Math.E).setVariable("n", i).evaluateAsync(exec)
     }
-    var i = 0
-    while ( {
-      i < numTests
-    }) {
+    for (i <- 0 until numTests) {
       assertEquals(correct1(i), results1(i).get.asInstanceOf[Double], 0d)
       assertEquals(correct2(i), results2(i).get.asInstanceOf[Double], 0d)
-      {
-        i += 1; i - 1
-      }
     }
   }
 }

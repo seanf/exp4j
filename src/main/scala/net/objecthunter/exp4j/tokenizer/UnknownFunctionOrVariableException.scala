@@ -17,10 +17,11 @@ object UnknownFunctionOrVariableException {
 
 @SerialVersionUID(1L)
 class UnknownFunctionOrVariableException(val expression: String, val position: Int, val length: Int) extends IllegalArgumentException {
+  final private var message: String = null
+  final private var token: String = null
+
   this.token = UnknownFunctionOrVariableException.token(expression, position, length)
   this.message = "Unknown function or variable '" + token + "' at pos " + position + " in expression '" + expression + "'"
-  final private var message = null
-  final private var token = null
 
   override def getMessage: String = message
 

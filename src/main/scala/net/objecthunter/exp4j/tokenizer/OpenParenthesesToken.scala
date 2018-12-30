@@ -29,5 +29,5 @@
  */
 package net.objecthunter.exp4j.tokenizer
 
-class OpenParenthesesToken private[tokenizer]() extends Token(TOKEN_PARENTHESES_OPEN) {
+class OpenParenthesesToken private[tokenizer]() extends Token(Token.TOKEN_PARENTHESES_OPEN) {
 }
