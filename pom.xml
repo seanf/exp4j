@@ -169,6 +169,8 @@
     </reporting>
 
     <build>
+        <!--<sourceDirectory>src/main/scala</sourceDirectory>-->
+        <!--<testSourceDirectory>src/test/scala</testSourceDirectory>-->
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
@@ -233,6 +235,25 @@
                 <version>2.5</version>
             </plugin>
             <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.4.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <args>
+                        <!-- work-around for https://issues.scala-lang.org/browse/SI-8358 -->
+                        <arg>-nobootcp</arg>
+                    </args>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -244,4 +265,89 @@
             </plugin>
         </plugins>
     </build>
+
+    <!-- Maven profiles allow you to support both Scala 2.10, 2.11 and Scala 2.12 with
+  the right dependencies for modules specified for each version separately -->
+    <profiles>
+        <profile>
+            <id>scala-2.12</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <scala.version>2.12.7</scala.version>
+                <scala.compat.version>2.12</scala.compat.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                    <version>${scala.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-xml_${scala.compat.version}</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-parser-combinators_${scala.compat.version}</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-swing_${scala.compat.version}</artifactId>
+                    <version>2.0.3</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>scala-2.11</id>
+            <properties>
+                <scala.version>2.11.12</scala.version>
+                <scala.compat.version>2.11</scala.compat.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                    <version>${scala.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-xml_${scala.compat.version}</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-parser-combinators_${scala.compat.version}</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-swing_${scala.compat.version}</artifactId>
+                    <version>1.0.2</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>scala-2.10</id>
+            <properties>
+                <scala.version>2.10.7</scala.version>
+                <scala.compat.version>2.10</scala.compat.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
+                    <version>${scala.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-swing</artifactId>
+                    <version>${scala.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
