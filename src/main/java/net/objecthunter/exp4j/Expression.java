@@ -180,21 +180,25 @@ public class Expression {
 
     public double evaluate() {
         final ArrayStack output = new ArrayStack();
-        for (int i = 0; i < tokens.length; i++) {
-            Token t = tokens[i];
+        for (Token t : tokens) {
             if (t.getType() == Token.TOKEN_NUMBER) {
                 output.push(((NumberToken) t).getValue());
             } else if (t.getType() == Token.TOKEN_VARIABLE) {
                 final String name = ((VariableToken) t).getName();
                 final Double value = this.variables.get(name);
                 if (value == null) {
-                    throw new IllegalArgumentException("No value has been set for the setVariable '" + name + "'.");
+                    throw new IllegalArgumentException(
+                            "No value has been set for the setVariable '" +
+                                    name + "'.");
                 }
                 output.push(value);
             } else if (t.getType() == Token.TOKEN_OPERATOR) {
                 OperatorToken op = (OperatorToken) t;
                 if (output.size() < op.getOperator().getNumOperands()) {
-                    throw new IllegalArgumentException("Invalid number of operands available for '" + op.getOperator().getSymbol() + "' operator");
+                    throw new IllegalArgumentException(
+                            "Invalid number of operands available for '" +
+                                    op.getOperator().getSymbol() +
+                                    "' operator");
                 }
                 if (op.getOperator().getNumOperands() == 2) {
                     /* pop the operands and push the result of the operation */
@@ -210,7 +214,10 @@ public class Expression {
                 FunctionToken func = (FunctionToken) t;
                 final int numArguments = func.getFunction().getNumArguments();
                 if (output.size() < numArguments) {
-                    throw new IllegalArgumentException("Invalid number of arguments available for '" + func.getFunction().getName() + "' function");
+                    throw new IllegalArgumentException(
+                            "Invalid number of arguments available for '" +
+                                    func.getFunction().getName() +
+                                    "' function");
                 }
                 /* collect the arguments from the stack */
                 double[] args = new double[numArguments];

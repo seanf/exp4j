@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
 
 
 public class ExpressionTest {
@@ -78,10 +79,8 @@ public class ExpressionTest {
                 if (arg < 0) {
                     throw new IllegalArgumentException("The operand of the factorial can not be less than zero");
                 }
-                double result = 1;
-                for (int i = 1; i <= arg; i++) {
-                    result *= i;
-                }
+                double result = IntStream.rangeClosed(1, arg).asDoubleStream()
+                        .reduce(1, (a, b) -> a * b);
                 return result;
             }
         };
@@ -187,10 +186,8 @@ public class ExpressionTest {
                 if (arg < 0) {
                     throw new IllegalArgumentException("The operand of the factorial can not be less than zero");
                 }
-                double result = 1;
-                for (int i = 1; i <= arg; i++) {
-                    result *= i;
-                }
+                double result = IntStream.rangeClosed(1, arg).asDoubleStream()
+                        .reduce(1, (a, b) -> a * b);
                 return result;
             }
         };
@@ -212,10 +209,8 @@ public class ExpressionTest {
                 if (arg < 0) {
                     throw new IllegalArgumentException("The operand of the factorial can not be less than zero");
                 }
-                double result = 1;
-                for (int i = 1; i <= arg; i++) {
-                    result *= i;
-                }
+                double result = IntStream.rangeClosed(1, arg).asDoubleStream()
+                        .reduce(1, (a, b) -> a * b);
                 return result;
             }
         };

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,24 +39,23 @@ public class ConcurrencyTests {
         double[] correct2 = new double[numTests];
         Future[] results2 = new Future[numTests];
 
-        for (int i = 0; i < numTests;i++) {
-            correct1[i] = Math.sin(2*Math.PI/(i+1));
+        IntStream.range(0, numTests).forEach(i -> {
+            correct1[i] = Math.sin(2 * Math.PI / (i + 1));
             results1[i] = new ExpressionBuilder("sin(2pi/(n+1))")
                     .variables("pi", "n")
                     .build()
-                    .setVariable("pi",Math.PI)
+                    .setVariable("pi", Math.PI)
                     .setVariable("n", i)
                     .evaluateAsync(exec);
-
-            correct2[i] = Math.log(Math.E * Math.PI * (i+1));
+            correct2[i] = Math.log(Math.E * Math.PI * (i + 1));
             results2[i] = new ExpressionBuilder("log(epi(n+1))")
                     .variables("pi", "n", "e")
                     .build()
-                    .setVariable("pi",Math.PI)
+                    .setVariable("pi", Math.PI)
                     .setVariable("e", Math.E)
                     .setVariable("n", i)
                     .evaluateAsync(exec);
-        }
+        });
 
         for (int i = 0; i< numTests;i++) {
             assertEquals(correct1[i], (Double) results1[i].get(), 0d);

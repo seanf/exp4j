@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.EmptyStackException;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 
@@ -52,9 +53,7 @@ public class ArrayStackTest {
     public void testPushLessSize() {
         ArrayStack stack = new ArrayStack(5);
 
-        for (int i = 0; i < 5; i++) {
-            stack.push(i);
-        }
+        IntStream.range(0, 5).forEach(stack::push);
 
         assertEquals(5, stack.size());
     }
@@ -63,9 +62,7 @@ public class ArrayStackTest {
     public void testPeek() {
         ArrayStack stack = new ArrayStack(5);
 
-        for (int i = 0; i < 5; i++) {
-            stack.push(i);
-        }
+        IntStream.range(0, 5).forEach(stack::push);
 
         assertEquals(4d, stack.peek(), 0d);
         assertEquals(4d, stack.peek(), 0d);
@@ -95,9 +92,7 @@ public class ArrayStackTest {
     public void testPop() {
         ArrayStack stack = new ArrayStack(5);
 
-        for (int i = 0; i < 5; i++) {
-            stack.push(i);
-        }
+        IntStream.range(0, 5).forEach(stack::push);
 
         while (!stack.isEmpty()) {
             stack.pop();
@@ -108,9 +103,7 @@ public class ArrayStackTest {
     public void testPop2() {
         ArrayStack stack = new ArrayStack(5);
 
-        for (int i = 0; i < 5; i++) {
-            stack.push(i);
-        }
+        IntStream.range(0, 5).forEach(stack::push);
 
         while (true) {
             stack.pop();
@@ -121,11 +114,11 @@ public class ArrayStackTest {
     public void testPop3() {
         ArrayStack stack = new ArrayStack(5);
 
-        for (int i = 0; i < 5; i++) {
+        IntStream.range(0, 5).forEach(i -> {
             stack.push(i);
             assertEquals(1, stack.size());
             assertEquals(i, stack.pop(), 0d);
-        }
+        });
 
         assertEquals(0, stack.size());
         assertTrue(stack.isEmpty());

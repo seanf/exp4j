@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import net.objecthunter.exp4j.operator.Operator;
 import net.objecthunter.exp4j.tokenizer.Token;
@@ -100,10 +101,8 @@ public class ShuntingYardTest {
                 if (arg < 0) {
                     throw new IllegalArgumentException("The operand of the factorial can not be less than zero");
                 }
-                double result = 1;
-                for (int i = 1; i <= arg; i++) {
-                    result *= i;
-                }
+                double result = IntStream.rangeClosed(1, arg).asDoubleStream()
+                        .reduce(1, (a, b) -> a * b);
                 return result;
             }
         };
