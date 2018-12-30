@@ -17,12 +17,14 @@ package net.objecthunter.exp4j.tokenizer
 
 import net.objecthunter.exp4j.function.Function
 import net.objecthunter.exp4j.function.Functions
+import net.objecthunter.exp4j.multiplatform.isDigit
+import net.objecthunter.exp4j.multiplatform.isLetter
 import net.objecthunter.exp4j.operator.Operator
 import net.objecthunter.exp4j.operator.Operators
 
 class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userOperators: Map<String, Operator>?, variableNames: Set<String>?, private val implicitMultiplication: Boolean = true) {
 
-    private val expression: CharArray = expression.trim { it <= ' ' }.toCharArray()
+    private val expression: String = expression.trim { it <= ' ' }
 
     private val expressionLength: Int
 
@@ -38,29 +40,29 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
 
 
     init {
-        this.expressionLength = this.expression.size
+        this.expressionLength = this.expression.length
         this.userFunctions = userFunctions ?: mapOf()
         this.userOperators = userOperators ?: mapOf()
         this.variableNames = variableNames ?: setOf()
     }
 
     operator fun hasNext(): Boolean {
-        return this.expression.size > pos
+        return this.expression.length > pos
     }
 
     fun nextToken(): Token {
         var ch = expression[pos]
-        while (Character.isWhitespace(ch)) {
+        while (ch.isWhitespace()) {
             ch = expression[++pos]
         }
-        if (Character.isDigit(ch) || ch == '.') {
+        if (ch.isDigit() || ch == '.') {
             lastToken?.let { lt ->
                 if (lt.type == Token.TOKEN_NUMBER) {
                     throw IllegalArgumentException("Unable to parse char '" + ch + "' (Code:" + ch.toInt() + ") at [" + pos + "]")
-                } else if (implicitMultiplication && (lt.type != Token.TOKEN_OPERATOR.toInt()
-                                && lt.type != Token.TOKEN_PARENTHESES_OPEN.toInt()
-                                && lt.type != Token.TOKEN_FUNCTION.toInt()
-                                && lt.type != Token.TOKEN_SEPARATOR.toInt())) {
+                } else if (implicitMultiplication && (lt.type != Token.TOKEN_OPERATOR
+                                && lt.type != Token.TOKEN_PARENTHESES_OPEN
+                                && lt.type != Token.TOKEN_FUNCTION
+                                && lt.type != Token.TOKEN_SEPARATOR)) {
                     // insert an implicit multiplication token
                     lastToken = OperatorToken(Operators.getBuiltinOperator('*', 2)!!)
                     return lastToken!!
@@ -72,10 +74,10 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
         } else if (isOpenParentheses(ch)) {
             lastToken?.let { lt ->
                 if (implicitMultiplication &&
-                        (lt.type != Token.TOKEN_OPERATOR.toInt()
-                                && lt.type != Token.TOKEN_PARENTHESES_OPEN.toInt()
-                                && lt.type != Token.TOKEN_FUNCTION.toInt()
-                                && lt.type != Token.TOKEN_SEPARATOR.toInt())) {
+                        (lt.type != Token.TOKEN_OPERATOR
+                                && lt.type != Token.TOKEN_PARENTHESES_OPEN
+                                && lt.type != Token.TOKEN_FUNCTION
+                                && lt.type != Token.TOKEN_SEPARATOR)) {
                     // insert an implicit multiplication token
                     lastToken = OperatorToken(Operators.getBuiltinOperator('*', 2)!!)
                     return lastToken!!
@@ -86,14 +88,14 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
             return parseParentheses(false)
         } else if (Operator.isAllowedOperatorChar(ch)) {
             return parseOperatorToken(ch)
-        } else if (isAlphabetic(ch.toInt()) || ch == '_') {
+        } else if (isAlphabetic(ch) || ch == '_') {
             // parse the name which can be a setVariable or a function
             lastToken?.let { lt ->
                 if (implicitMultiplication &&
-                        (lt.type != Token.TOKEN_OPERATOR.toInt()
-                                && lt.type != Token.TOKEN_PARENTHESES_OPEN.toInt()
-                                && lt.type != Token.TOKEN_FUNCTION.toInt()
-                                && lt.type != Token.TOKEN_SEPARATOR.toInt())) {
+                        (lt.type != Token.TOKEN_OPERATOR
+                                && lt.type != Token.TOKEN_PARENTHESES_OPEN
+                                && lt.type != Token.TOKEN_FUNCTION
+                                && lt.type != Token.TOKEN_SEPARATOR)) {
                     // insert an implicit multiplication token
                     lastToken = OperatorToken(Operators.getBuiltinOperator('*', 2)!!)
                     return lastToken!!
@@ -143,8 +145,8 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
             this.pos++
         }
         testPos = offset + len - 1
-        while (!isEndOfExpression(testPos) && isVariableOrFunctionCharacter(expression[testPos].toInt())) {
-            val name = String(expression, offset, len)
+        while (!isEndOfExpression(testPos) && isVariableOrFunctionCharacter(expression[testPos])) {
+            val name = expression.substring(offset, offset + len)
             if (variableNames.contains(name)) {
                 lastValidLen = len
                 lastValidToken = VariableToken(name)
@@ -159,7 +161,7 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
             testPos = offset + len - 1
         }
         if (lastValidToken == null) {
-            throw UnknownFunctionOrVariableException(String(expression), pos, len)
+            throw UnknownFunctionOrVariableException(expression, pos, len)
         }
         pos += lastValidLen
         lastToken = lastValidToken
@@ -173,7 +175,7 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
     private fun parseOperatorToken(firstChar: Char): Token {
         val offset = this.pos
         var len = 1
-        val symbol = StringBuilder()
+        var symbol = StringBuilder()
         var lastValid: Operator? = null
         symbol.append(firstChar)
 
@@ -184,7 +186,9 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
         while (symbol.isNotEmpty()) {
             val op = this.getOperator(symbol.toString())
             if (op == null) {
-                symbol.setLength(symbol.length - 1)
+                // remove last char
+//                symbol.setLength(symbol.length - 1)
+                symbol = StringBuilder(symbol.subSequence(0, symbol.length - 1))
             } else {
                 lastValid = op
                 break
@@ -249,19 +253,19 @@ class Tokenizer(expression: String, userFunctions: Map<String, Function>?, userO
     companion object {
 
         private fun isNumeric(ch: Char, lastCharE: Boolean): Boolean {
-            return Character.isDigit(ch) || ch == '.' || ch == 'e' || ch == 'E' ||
+            return ch.isDigit() || ch == '.' || ch == 'e' || ch == 'E' ||
                     lastCharE && (ch == '-' || ch == '+')
         }
 
-        fun isAlphabetic(codePoint: Int): Boolean {
-            return Character.isLetter(codePoint)
+        fun isAlphabetic(codePoint: Char): Boolean {
+            return codePoint.isLetter()
         }
 
-        fun isVariableOrFunctionCharacter(codePoint: Int): Boolean {
+        fun isVariableOrFunctionCharacter(codePoint: Char): Boolean {
             return isAlphabetic(codePoint) ||
-                    Character.isDigit(codePoint) ||
-                    codePoint == '_'.toInt() ||
-                    codePoint == '.'.toInt()
+                    codePoint.isDigit() ||
+                    codePoint == '_' ||
+                    codePoint == '.'
         }
     }
 }

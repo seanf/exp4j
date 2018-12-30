@@ -21,7 +21,7 @@ package net.objecthunter.exp4j
  *
  * @author Federico Vera (dktcoding [at] gmail)
  */
-internal class ArrayStack @JvmOverloads constructor(initialCapacity: Int = 5) {
+internal class ArrayStack constructor(initialCapacity: Int = 5) {
 
     private var data: DoubleArray
 
@@ -42,9 +42,8 @@ internal class ArrayStack @JvmOverloads constructor(initialCapacity: Int = 5) {
 
     fun push(value: Double) {
         if (idx + 1 == data.size) {
-            val temp = DoubleArray((data.size * 1.2).toInt() + 1)
-            System.arraycopy(data, 0, temp, 0, data.size)
-            data = temp
+            val newSize = (data.size * 1.2).toInt() + 1
+            data = data.copyOf(newSize)
         }
 
         data[++idx] = value

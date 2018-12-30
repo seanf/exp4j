@@ -47,15 +47,15 @@ object ShuntingYard {
                 Token.TOKEN_NUMBER, Token.TOKEN_VARIABLE -> output.add(token)
                 Token.TOKEN_FUNCTION -> stack.push(token)
                 Token.TOKEN_SEPARATOR -> {
-                    while (!stack.empty() && stack.peek().type != Token.TOKEN_PARENTHESES_OPEN.toInt()) {
+                    while (!stack.empty() && stack.peek().type != Token.TOKEN_PARENTHESES_OPEN) {
                         output.add(stack.pop())
                     }
-                    if (stack.empty() || stack.peek().type != Token.TOKEN_PARENTHESES_OPEN.toInt()) {
+                    if (stack.empty() || stack.peek().type != Token.TOKEN_PARENTHESES_OPEN) {
                         throw IllegalArgumentException("Misplaced function separator ',' or mismatched parentheses")
                     }
                 }
                 Token.TOKEN_OPERATOR -> {
-                    while (!stack.empty() && stack.peek().type == Token.TOKEN_OPERATOR.toInt()) {
+                    while (!stack.empty() && stack.peek().type == Token.TOKEN_OPERATOR) {
                         val o1 = token as OperatorToken
                         val o2 = stack.peek() as OperatorToken
                         if (o1.operator.numOperands == 1 && o2.operator.numOperands == 2) {
@@ -70,11 +70,11 @@ object ShuntingYard {
                 }
                 Token.TOKEN_PARENTHESES_OPEN -> stack.push(token)
                 Token.TOKEN_PARENTHESES_CLOSE -> {
-                    while (stack.peek().type != Token.TOKEN_PARENTHESES_OPEN.toInt()) {
+                    while (stack.peek().type != Token.TOKEN_PARENTHESES_OPEN) {
                         output.add(stack.pop())
                     }
                     stack.pop()
-                    if (!stack.empty() && stack.peek().type == Token.TOKEN_FUNCTION.toInt()) {
+                    if (!stack.empty() && stack.peek().type == Token.TOKEN_FUNCTION) {
                         output.add(stack.pop())
                     }
                 }
@@ -83,7 +83,7 @@ object ShuntingYard {
         }
         while (!stack.empty()) {
             val t = stack.pop()
-            if (t.type == Token.TOKEN_PARENTHESES_CLOSE.toInt() || t.type == Token.TOKEN_PARENTHESES_OPEN.toInt()) {
+            if (t.type == Token.TOKEN_PARENTHESES_CLOSE || t.type == Token.TOKEN_PARENTHESES_OPEN) {
                 throw IllegalArgumentException("Mismatched parentheses detected. Please check the expression")
             } else {
                 output.add(t)

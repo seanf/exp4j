@@ -21,6 +21,8 @@ import net.objecthunter.exp4j.tokenizer.NumberToken
 import net.objecthunter.exp4j.tokenizer.OperatorToken
 import net.objecthunter.exp4j.tokenizer.Token
 import net.objecthunter.exp4j.tokenizer.VariableToken
+import kotlin.math.E
+import kotlin.math.PI
 
 class Expression {
 
@@ -34,7 +36,7 @@ class Expression {
         get() {
             val variables = HashSet<String>()
             for (t in tokens) {
-                if (t.type == Token.TOKEN_VARIABLE.toInt())
+                if (t.type == Token.TOKEN_VARIABLE)
                     variables.add((t as VariableToken).name)
             }
             return variables
@@ -42,10 +44,10 @@ class Expression {
 
     private fun createDefaultVariables(): MutableMap<String, Double> {
         val vars = HashMap<String, Double>(4)
-        vars["pi"] = Math.PI
-        vars["π"] = Math.PI
+        vars["pi"] = PI
+        vars["π"] = PI
         vars["φ"] = 1.61803398874
-        vars["e"] = Math.E
+        vars["e"] = E
         return vars
     }
 
@@ -92,13 +94,12 @@ class Expression {
         return this
     }
 
-    @JvmOverloads
     fun validate(checkVariablesSet: Boolean = true): ValidationResult {
         val errors = ArrayList<String>(0)
         if (checkVariablesSet) {
             /* check that all vars have a value set */
             for (t in this.tokens) {
-                if (t.type == Token.TOKEN_VARIABLE.toInt()) {
+                if (t.type == Token.TOKEN_VARIABLE) {
                     val `var` = (t as VariableToken).name
                     if (!variables.containsKey(`var`)) {
                         errors.add("The setVariable '$`var`' has not been set")
@@ -152,16 +153,16 @@ class Expression {
     fun evaluate(): Double {
         val output = ArrayStack()
         for (t in tokens) {
-            if (t.type == Token.TOKEN_NUMBER.toInt()) {
+            if (t.type == Token.TOKEN_NUMBER) {
                 output.push((t as NumberToken).value)
-            } else if (t.type == Token.TOKEN_VARIABLE.toInt()) {
+            } else if (t.type == Token.TOKEN_VARIABLE) {
                 val name = (t as VariableToken).name
                 val value = this.variables[name]
                         ?: throw IllegalArgumentException(
                                 "No value has been set for the setVariable '" +
                                         name + "'.")
                 output.push(value)
-            } else if (t.type == Token.TOKEN_OPERATOR.toInt()) {
+            } else if (t.type == Token.TOKEN_OPERATOR) {
                 val op = t as OperatorToken
                 if (output.size() < op.operator.numOperands) {
                     throw IllegalArgumentException(
@@ -179,7 +180,7 @@ class Expression {
                     val arg = output.pop()
                     output.push(op.operator.apply(arg))
                 }
-            } else if (t.type == Token.TOKEN_FUNCTION.toInt()) {
+            } else if (t.type == Token.TOKEN_FUNCTION) {
                 val func = t as FunctionToken
                 val numArguments = func.function.numArguments
                 if (output.size() < numArguments) {

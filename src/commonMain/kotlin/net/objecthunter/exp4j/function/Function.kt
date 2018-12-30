@@ -16,6 +16,9 @@
 
 package net.objecthunter.exp4j.function
 
+import net.objecthunter.exp4j.multiplatform.isDigit
+import net.objecthunter.exp4j.multiplatform.isLetter
+
 /**
  * A class representing a Function which can be used in an expression
  */
@@ -26,7 +29,7 @@ abstract class Function
  * @param name the name of the Function
  * @param numArguments the number of arguments the function takes
  */
-@JvmOverloads constructor(
+constructor(
         /**
          * Get the name of the Function
          *
@@ -95,9 +98,9 @@ abstract class Function
 
             for (i in 0 until size) {
                 val c = name[i]
-                if (Character.isLetter(c) || c == '_') {
+                if (c.isLetter() || c == '_') {
                     continue
-                } else if (Character.isDigit(c) && i > 0) {
+                } else if (c.isDigit() && i > 0) {
                     continue
                 }
                 return false
@@ -106,8 +109,4 @@ abstract class Function
         }
     }
 }
-/**
- * Create a new Function with a given name that takes a single argument
- *
- * @param name the name of the Function
- */
+

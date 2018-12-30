@@ -131,7 +131,7 @@ class ExpressionBuilder
 
     private fun checkOperatorSymbol(op: Operator) {
         val name = op.symbol
-        for (ch in name.toCharArray()) {
+        for (ch in name) {
             if (!Operator.isAllowedOperatorChar(ch)) {
                 throw IllegalArgumentException("The operator symbol '$name' is invalid")
             }

@@ -15,6 +15,8 @@
 */
 package net.objecthunter.exp4j.operator
 
+import kotlin.math.pow
+
 object Operators {
     private val INDEX_ADDITION = 0
     private val INDEX_SUBTRACTION = 1
@@ -63,7 +65,7 @@ object Operators {
         }
         builtinOperators[INDEX_POWER] = object : Operator("^", 2, false, Operator.PRECEDENCE_POWER) {
             override fun apply(vararg args: Double): Double {
-                return Math.pow(args[0], args[1])
+                return args[0].pow(args[1])
             }
         }
         builtinOperators[INDEX_MODULO] = object : Operator("%", 2, true, Operator.PRECEDENCE_MODULO) {

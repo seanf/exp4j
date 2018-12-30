@@ -15,6 +15,9 @@
 */
 package net.objecthunter.exp4j.function
 
+import net.objecthunter.exp4j.multiplatform.cbrt
+import kotlin.math.*
+
 /**
  * Class representing the builtin functions available for use in expressions
  */
@@ -48,116 +51,116 @@ object Functions {
     init {
         builtinFunctions[INDEX_SIN] = object : Function("sin") {
             override fun apply(vararg args: Double): Double {
-                return Math.sin(args[0])
+                return sin(args[0])
             }
         }
         builtinFunctions[INDEX_COS] = object : Function("cos") {
             override fun apply(vararg args: Double): Double {
-                return Math.cos(args[0])
+                return cos(args[0])
             }
         }
         builtinFunctions[INDEX_TAN] = object : Function("tan") {
             override fun apply(vararg args: Double): Double {
-                return Math.tan(args[0])
+                return tan(args[0])
             }
         }
         builtinFunctions[INDEX_COT] = object : Function("cot") {
             override fun apply(vararg args: Double): Double {
-                val tan = Math.tan(args[0])
+                val tan = tan(args[0])
                 if (tan == 0.0) {
                     throw ArithmeticException("Division by zero in cotangent!")
                 }
-                return 1.0 / Math.tan(args[0])
+                return 1.0 / tan(args[0])
             }
         }
         builtinFunctions[INDEX_LOG] = object : Function("log") {
             override fun apply(vararg args: Double): Double {
-                return Math.log(args[0])
+                return ln(args[0])
             }
         }
         builtinFunctions[INDEX_LOG2] = object : Function("log2") {
             override fun apply(vararg args: Double): Double {
-                return Math.log(args[0]) / Math.log(2.0)
+                return ln(args[0]) / ln(2.0)
             }
         }
         builtinFunctions[INDEX_LOG10] = object : Function("log10") {
             override fun apply(vararg args: Double): Double {
-                return Math.log10(args[0])
+                return log10(args[0])
             }
         }
         builtinFunctions[INDEX_LOG1P] = object : Function("log1p") {
             override fun apply(vararg args: Double): Double {
-                return Math.log1p(args[0])
+                return ln1p(args[0])
             }
         }
         builtinFunctions[INDEX_ABS] = object : Function("abs") {
             override fun apply(vararg args: Double): Double {
-                return Math.abs(args[0])
+                return abs(args[0])
             }
         }
         builtinFunctions[INDEX_ACOS] = object : Function("acos") {
             override fun apply(vararg args: Double): Double {
-                return Math.acos(args[0])
+                return acos(args[0])
             }
         }
         builtinFunctions[INDEX_ASIN] = object : Function("asin") {
             override fun apply(vararg args: Double): Double {
-                return Math.asin(args[0])
+                return asin(args[0])
             }
         }
         builtinFunctions[INDEX_ATAN] = object : Function("atan") {
             override fun apply(vararg args: Double): Double {
-                return Math.atan(args[0])
+                return atan(args[0])
             }
         }
         builtinFunctions[INDEX_CBRT] = object : Function("cbrt") {
             override fun apply(vararg args: Double): Double {
-                return Math.cbrt(args[0])
+                return args[0].cbrt()
             }
         }
         builtinFunctions[INDEX_FLOOR] = object : Function("floor") {
             override fun apply(vararg args: Double): Double {
-                return Math.floor(args[0])
+                return floor(args[0])
             }
         }
         builtinFunctions[INDEX_SINH] = object : Function("sinh") {
             override fun apply(vararg args: Double): Double {
-                return Math.sinh(args[0])
+                return sinh(args[0])
             }
         }
         builtinFunctions[INDEX_SQRT] = object : Function("sqrt") {
             override fun apply(vararg args: Double): Double {
-                return Math.sqrt(args[0])
+                return sqrt(args[0])
             }
         }
         builtinFunctions[INDEX_TANH] = object : Function("tanh") {
             override fun apply(vararg args: Double): Double {
-                return Math.tanh(args[0])
+                return tanh(args[0])
             }
         }
         builtinFunctions[INDEX_COSH] = object : Function("cosh") {
             override fun apply(vararg args: Double): Double {
-                return Math.cosh(args[0])
+                return cosh(args[0])
             }
         }
         builtinFunctions[INDEX_CEIL] = object : Function("ceil") {
             override fun apply(vararg args: Double): Double {
-                return Math.ceil(args[0])
+                return ceil(args[0])
             }
         }
         builtinFunctions[INDEX_POW] = object : Function("pow", 2) {
             override fun apply(vararg args: Double): Double {
-                return Math.pow(args[0], args[1])
+                return args[0].pow(args[1])
             }
         }
         builtinFunctions[INDEX_EXP] = object : Function("exp", 1) {
             override fun apply(vararg args: Double): Double {
-                return Math.exp(args[0])
+                return exp(args[0])
             }
         }
         builtinFunctions[INDEX_EXPM1] = object : Function("expm1", 1) {
             override fun apply(vararg args: Double): Double {
-                return Math.expm1(args[0])
+                return expm1(args[0])
             }
         }
         builtinFunctions[INDEX_SGN] = object : Function("signum", 1) {
@@ -232,3 +235,4 @@ object Functions {
     }
 
 }
+
